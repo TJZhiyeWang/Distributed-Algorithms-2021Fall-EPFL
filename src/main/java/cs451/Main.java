@@ -1,9 +1,15 @@
 package cs451;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import cs451.Links.PerfectLink;
+import cs451.Listener.Listener;
+import cs451.Utils.Constant;
+import cs451.Utils.Logger;
+import cs451.Utils.Message;
+
+import java.io.*;
 import java.net.Socket;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -55,8 +61,25 @@ public class Main {
         System.out.println(parser.config() + "\n");
 
         System.out.println("Doing some initialization\n");
-
-        System.out.println("Broadcasting and delivering messages...\n");
+        try{
+            Scanner scan = new Scanner(new FileReader(parser.config()));
+            int messageNum = Integer.parseInt(scan.next());//how many messages each process should send
+            int destinationProcess = Integer.parseInt(scan.next());//process should receive the messages
+            Host host = parser.hosts().get(parser.myId()-1);
+            Logger logger = new Logger(parser.output());
+            PerfectLink perfectLink = new PerfectLink(host.getPort(), logger);
+            System.out.println("Broadcasting and delivering messages...\n");
+            Listener listener = new Listener(perfectLink, logger);
+            if (parser.myId() != destinationProcess){
+                for (int j = 1; j <= messageNum; j++){
+                    //build message
+                    Message m = new Message(parser.myId(), j);
+                    perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
+                }
+            }
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
 
         // After a process finishes broadcasting,
         // it waits forever for the delivery of messages.

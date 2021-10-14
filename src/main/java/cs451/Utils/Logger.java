@@ -6,7 +6,7 @@ public class Logger {
     String directory;
     File file;
     OutputStream outputStream;
-    Logger(String dir){
+    public Logger(String dir){
         this.directory = dir;
         file = new File(directory);
         if(!file.getParentFile().exists()){

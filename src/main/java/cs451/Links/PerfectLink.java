@@ -11,7 +11,7 @@ public class PerfectLink implements Link{
     Set delivered;
     StubbornLink stubbornLink;
     Logger logger;
-    PerfectLink(int port, Logger logger){
+    public PerfectLink(int port, Logger logger){
         this.stubbornLink = new StubbornLink(port);
         this.delivered = new HashSet<Message>();
         this.logger = logger;

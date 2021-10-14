@@ -9,7 +9,7 @@ import cs451.Utils.Record;
 public class Listener {
     PerfectLink perfectLink;
     Logger logger;
-    Listener(PerfectLink perfectLink, Logger logger){
+    public Listener(PerfectLink perfectLink, Logger logger){
         this.perfectLink = perfectLink;
         this.logger = logger;
         Runnable listener = new Runnable() {
