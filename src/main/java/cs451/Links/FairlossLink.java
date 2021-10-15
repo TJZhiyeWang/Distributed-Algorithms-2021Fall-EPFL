@@ -9,7 +9,7 @@ import java.net.*;
 public class FairlossLink implements Link{
 
     DatagramSocket socket;
-    FairlossLink(int port){
+    public FairlossLink(int port){
         try {
             this.socket = new DatagramSocket(port);
         } catch (SocketException e){

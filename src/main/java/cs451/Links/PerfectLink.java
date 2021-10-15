@@ -19,6 +19,7 @@ public class PerfectLink implements Link{
     @Override
     public void send(Message m, String ip, int port){
         String record = Constant.BROADCAST + " " + m.payload + "\n";
+        System.out.println(record);
         logger.write(record);
         stubbornLink.send(m, ip, port);
     }
@@ -30,8 +31,11 @@ public class PerfectLink implements Link{
 
     @Override
     public Message deliver(Message m){
-        if (delivered.contains(m))
+        if (delivered.contains(m)) {
             return null;
+        } else {
+            delivered.add(m);
+        }
         return m;
     }
 }
