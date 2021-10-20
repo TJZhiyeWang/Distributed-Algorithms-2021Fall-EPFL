@@ -4,24 +4,24 @@ import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StubbornLink implements Link{
 
-    Set sent;
+    public Queue<Record> queue;
     FairlossLink fairlossLink;
     Thread t = new Thread(new Runnable() {
         @Override
         public void run() {
             while(true){
                 try{
-                    for(Object obj : sent){
-                        Record record = (Record) obj;
-                        send(record);
+                    if(!queue.isEmpty()){
+                        Record record = queue.poll();
+                        send(record.m, record.ipAddress, record.port);
+                        queue.offer(record);
                     }
-                    Thread.sleep(Constant.INTERVAL);
+                    Thread.sleep(Constant.SENDINTERVAL);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -31,28 +31,22 @@ public class StubbornLink implements Link{
 
     public StubbornLink(int port) {
         this.fairlossLink = new FairlossLink(port);
-        this.sent = new LinkedHashSet<Record>();
+        this.queue = new ConcurrentLinkedQueue<>();
         t.start();
     }
 
     @Override
     public void send(Message m, String ip, int port){
         fairlossLink.send(m, ip, port);
-        Record record = new Record(m, ip, port);
-        sent.add(record);
-    }
-
-    public void send(Record record){
-        fairlossLink.send(record.m, record.ipAddress, record.port);
     }
 
     @Override
-    public Message receive(){
+    public Record receive(){
         return fairlossLink.receive();
     }
 
     @Override
-    public Message deliver(Message m){
+    public Record deliver(Record m){
         return fairlossLink.deliver(m);
     }
 

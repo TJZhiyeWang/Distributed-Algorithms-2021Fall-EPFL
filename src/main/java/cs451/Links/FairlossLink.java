@@ -2,6 +2,7 @@ package cs451.Links;
 
 import cs451.Utils.Constant;
 import cs451.Utils.Message;
+import cs451.Utils.Record;
 
 import java.io.*;
 import java.net.*;
@@ -17,11 +18,7 @@ public class FairlossLink implements Link{
         }
     }
 
-    /* use udp to send a packet
-    * :param m Message to send
-    * :param ip destination host ip
-    * :param port destination port
-    */
+    /* use udp to send a packet */
     @Override
     public void send(Message m, String ip, int port) {
         try {
@@ -41,7 +38,7 @@ public class FairlossLink implements Link{
     /* receive but not deliver a packet
      */
     @Override
-    public Message receive() {
+    public Record receive() {
         byte[] container = new byte[128];
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
@@ -50,8 +47,11 @@ public class FairlossLink implements Link{
             ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(new ByteArrayInputStream(data)));
             try{
                 Object obj = inputStream.readObject();
-                if (obj instanceof Message)
-                    return (Message) obj;
+                if (obj instanceof Message){
+                    Record record = new Record((Message) obj, packet.getAddress().getHostAddress(), packet.getPort());
+                    return record;
+                }
+
             }catch (ClassNotFoundException e){
                 e.printStackTrace();
             }
@@ -62,7 +62,7 @@ public class FairlossLink implements Link{
     }
 
     @Override
-    public Message deliver(Message m) {
+    public Record deliver(Record m) {
         return m;
     }
 

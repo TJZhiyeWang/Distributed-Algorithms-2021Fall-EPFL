@@ -69,13 +69,12 @@ public class Main {
             System.out.println("Destination process to send all the message: " + destinationProcess);
             Host host = parser.hosts().get(parser.myId()-1);
             Logger logger = new Logger(parser.output());
-            PerfectLink perfectLink = new PerfectLink(host.getPort(), logger);
+            PerfectLink perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());
             System.out.println("Broadcasting and delivering messages...\n");
-            Listener listener = new Listener(perfectLink, logger);
             if (parser.myId() != destinationProcess){
                 for (int j = 1; j <= messageNum; j++){
                     //build message
-                    Message m = new Message(parser.myId(), j);
+                    Message m = new Message(j);
                     perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
                 }
             }
