@@ -21,6 +21,7 @@ public class PerfectLink implements Link{
         this.logger = logger;
         this.listener = new Listener(this, logger, hosts);
     }
+
     @Override
     public void send(Message m, String ip, int port){
         String log = Constant.BROADCAST + " " + m.payload + "\n";
@@ -43,4 +44,7 @@ public class PerfectLink implements Link{
         }
         return record;
     }
+
+    @Override
+    public void close(){ stubbornLink.close(); }
 }

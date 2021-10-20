@@ -1,9 +1,7 @@
 package cs451.Utils;
 
 import java.io.*;
-import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 public class Logger {
     String directory;

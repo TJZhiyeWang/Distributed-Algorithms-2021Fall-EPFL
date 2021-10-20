@@ -1,24 +1,25 @@
 package cs451;
 
 import cs451.Links.PerfectLink;
-import cs451.Listener.Listener;
 import cs451.Utils.Constant;
 import cs451.Utils.Logger;
 import cs451.Utils.Message;
 
 import java.io.*;
-import java.net.Socket;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
+    static PerfectLink perfectLink;
+    static Logger logger;
+
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
-
+        perfectLink.close();
         //write/flush output file if necessary
         System.out.println("Writing output.");
+        logger.close();
     }
 
     private static void initSignalHandlers() {
@@ -68,8 +69,8 @@ public class Main {
             System.out.println("Total number to send: " + messageNum);
             System.out.println("Destination process to send all the message: " + destinationProcess);
             Host host = parser.hosts().get(parser.myId()-1);
-            Logger logger = new Logger(parser.output());
-            PerfectLink perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());
+            logger = new Logger(parser.output());
+            perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());
             System.out.println("Broadcasting and delivering messages...\n");
             if (parser.myId() != destinationProcess){
                 for (int j = 1; j <= messageNum; j++){

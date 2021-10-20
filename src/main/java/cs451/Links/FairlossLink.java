@@ -1,6 +1,5 @@
 package cs451.Links;
 
-import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
@@ -62,9 +61,9 @@ public class FairlossLink implements Link{
     }
 
     @Override
-    public Record deliver(Record m) {
-        return m;
-    }
+    public Record deliver(Record m) { return m; }
 
+    @Override
+    public void close(){ socket.close(); }
 
 }

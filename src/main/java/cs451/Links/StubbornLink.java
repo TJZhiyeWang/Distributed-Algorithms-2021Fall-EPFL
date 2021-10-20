@@ -50,5 +50,8 @@ public class StubbornLink implements Link{
         return fairlossLink.deliver(m);
     }
 
+    @Override
+    public void close(){ fairlossLink.close(); }
+
 
 }
