@@ -39,6 +39,6 @@ public class Listener {
     }
 
     public void stop(){
-        t.interrupt();
+        t.stop();
     }
 }
