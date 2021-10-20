@@ -37,4 +37,8 @@ public class Listener {
         this.hosts = hosts;
         t.start();
     }
+
+    public void stop(){
+        t.interrupt();
+    }
 }

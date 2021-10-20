@@ -46,5 +46,9 @@ public class PerfectLink implements Link{
     }
 
     @Override
-    public void close(){ stubbornLink.close(); }
+    public void close(){
+        this.stubbornLink.t.interrupt();
+        this.listener.stop();
+        stubbornLink.close();
+    }
 }

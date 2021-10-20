@@ -53,5 +53,7 @@ public class StubbornLink implements Link{
     @Override
     public void close(){ fairlossLink.close(); }
 
+    public void stop(){ t.interrupt(); }
+
 
 }
