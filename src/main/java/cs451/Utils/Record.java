@@ -10,4 +10,18 @@ public class Record {
         this.ipAddress = ipAddress;
         this.port = port;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (obj instanceof Record){
+            Record tmp = (Record) obj;
+            return (this.m.equals(tmp.m) && this.port == tmp.port && this.ipAddress.equals(tmp.ipAddress) );
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.port + this.ipAddress.hashCode() + this.m.hashCode();
+    }
 }

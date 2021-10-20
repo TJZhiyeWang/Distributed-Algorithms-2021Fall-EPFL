@@ -12,10 +12,11 @@ public class Listener {
     PerfectLink perfectLink;
     Logger logger;
     List<Host> hosts;
+    boolean flag = true;
     Thread t = new Thread(new Runnable() {
         @Override
         public void run() {
-            while(true){
+            while(flag){
                 try {
                     Record record = perfectLink.deliver(perfectLink.receive());
                     if (record != null) {
@@ -39,6 +40,6 @@ public class Listener {
     }
 
     public void stop(){
-        t.stop();
+        this.flag = false;
     }
 }

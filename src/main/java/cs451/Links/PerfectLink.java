@@ -17,7 +17,7 @@ public class PerfectLink implements Link{
     Listener listener;
     public PerfectLink(int port, Logger logger, List hosts){
         this.stubbornLink = new StubbornLink(port);
-        this.delivered = new HashSet<Message>();
+        this.delivered = new HashSet<Record>();
         this.logger = logger;
         this.listener = new Listener(this, logger, hosts);
     }
@@ -37,10 +37,10 @@ public class PerfectLink implements Link{
 
     @Override
     public Record deliver(Record record){
-        if (delivered.contains(record.m)) {
+        if (delivered.contains(record)) {
             return null;
         } else {
-            delivered.add(record.m);
+            delivered.add(record);
         }
         return record;
     }

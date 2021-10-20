@@ -11,10 +11,11 @@ public class StubbornLink implements Link{
 
     public Queue<Record> queue;
     FairlossLink fairlossLink;
+    boolean flag = true;
     Thread t = new Thread(new Runnable() {
         @Override
         public void run() {
-            while(true){
+            while(flag){
                 try{
                     if(!queue.isEmpty()){
                         Record record = queue.poll();
@@ -53,7 +54,7 @@ public class StubbornLink implements Link{
     @Override
     public void close(){ fairlossLink.close(); }
 
-    public void stop(){ t.stop(); }
+    public void stop(){ this.flag = false; }
 
 
 }
