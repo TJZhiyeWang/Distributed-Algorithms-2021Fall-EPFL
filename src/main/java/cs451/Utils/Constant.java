@@ -7,8 +7,8 @@ import java.util.List;
 public class Constant {
     public static final String BROADCAST = "b";
     public static final String DELIVER = "d";
-    public static final int RECEIVEINTERVAL = 100; //Interval between sending same message
-    public static final int SENDINTERVAL = 100;
+    public static final int RECEIVEINTERVAL = 300; //Interval between sending same message
+    public static final int SENDINTERVAL = 300;
     public static final int NOTFOUND = -1;
     public static final int BUFFER_SIZE = 30;
 

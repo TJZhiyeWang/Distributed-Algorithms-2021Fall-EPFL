@@ -15,11 +15,17 @@ public class PerfectLink implements Link{
     StubbornLink stubbornLink;
     Logger logger;
     Listener listener;
+    Thread tstubborn;
+    Thread tlistener;
     public PerfectLink(int port, Logger logger, List hosts){
         this.stubbornLink = new StubbornLink(port);
+        tstubborn = new Thread(this.stubbornLink);
+        tstubborn.start();
+        this.listener = new Listener(this, logger, hosts);
+        tlistener = new Thread(this.listener);
+        tlistener.start();
         this.delivered = new HashSet<Record>();
         this.logger = logger;
-        this.listener = new Listener(this, logger, hosts);
     }
 
     @Override
@@ -47,8 +53,10 @@ public class PerfectLink implements Link{
 
     @Override
     public void close(){
-        this.stubbornLink.stop();
-        this.listener.stop();
-        stubbornLink.close();
+
+            this.stubbornLink.stop();
+            this.listener.stop();
+
+        this.stubbornLink.close();
     }
 }

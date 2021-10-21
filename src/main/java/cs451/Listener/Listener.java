@@ -8,35 +8,34 @@ import cs451.Utils.Record;
 
 import java.util.List;
 
-public class Listener {
+public class Listener implements Runnable {
     PerfectLink perfectLink;
     Logger logger;
     List<Host> hosts;
-    boolean flag = true;
-    Thread t = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while(flag){
-                try {
-                    Record record = perfectLink.deliver(perfectLink.receive());
-                    if (record != null) {
-                        int srcProcess = Constant.getProcessIdFromIpAndPort(hosts, record.ipAddress, record.port);
-                        String log = Constant.DELIVER + " " + srcProcess + " " + record.m.payload + "\n";
-                        logger.log(log);
-                        System.out.println(log);
-                    }
-                    Thread.sleep(Constant.RECEIVEINTERVAL);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    });
+    public boolean flag = true;
+
     public Listener(PerfectLink perfectLink, Logger logger, List hosts){
         this.perfectLink = perfectLink;
         this.logger = logger;
         this.hosts = hosts;
-        t.start();
+    }
+
+    @Override
+    public void run(){
+        while(flag){
+            try {
+                Record record = perfectLink.deliver(perfectLink.receive());
+                if (record != null) {
+                    int srcProcess = Constant.getProcessIdFromIpAndPort(hosts, record.ipAddress, record.port);
+                    String log = Constant.DELIVER + " " + srcProcess + " " + record.m.payload + "\n";
+                    logger.log(log);
+                    System.out.println(log);
+                }
+                Thread.sleep(Constant.RECEIVEINTERVAL);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public void stop(){

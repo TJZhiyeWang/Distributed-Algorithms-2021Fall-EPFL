@@ -29,13 +29,10 @@ public class Logger {
         int limit = this.buffer.limit();
         int position = this.buffer.position();
         byte[] byteStream = msg.getBytes();
-        if ((limit - position) < byteStream.length + 1){
-            //not enough buffer for the new message
-            System.out.println("buffer exhausted, write into file");
+        if ((limit - position) < byteStream.length){
             write();
         }
         this.buffer.put(byteStream);
-        this.buffer.put("\n".getBytes());
     }
 
     //write broadcast or delivery record to the file

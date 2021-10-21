@@ -7,34 +7,33 @@ import cs451.Utils.Record;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class StubbornLink implements Link{
+public class StubbornLink implements Link, Runnable{
 
     public Queue<Record> queue;
     FairlossLink fairlossLink;
-    boolean flag = true;
-    Thread t = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while(flag){
-                try{
-                    if(!queue.isEmpty()){
-                        Record record = queue.poll();
-                        send(record.m, record.ipAddress, record.port);
-                        queue.offer(record);
-                    }
-                    Thread.sleep(Constant.SENDINTERVAL);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    });
+    public boolean flag = true;
 
     public StubbornLink(int port) {
         this.fairlossLink = new FairlossLink(port);
         this.queue = new ConcurrentLinkedQueue<>();
-        t.start();
     }
+    @Override
+    public void run(){
+        System.out.println(flag);
+        while(flag){
+            try{
+                if(!queue.isEmpty()){
+                    Record record = queue.poll();
+                    send(record.m, record.ipAddress, record.port);
+                    queue.offer(record);
+                }
+                Thread.sleep(Constant.SENDINTERVAL);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     @Override
     public void send(Message m, String ip, int port){
@@ -54,7 +53,9 @@ public class StubbornLink implements Link{
     @Override
     public void close(){ fairlossLink.close(); }
 
-    public void stop(){ this.flag = false; }
+    public void stop(){
+        this.flag = false;
+    }
 
 
 }
