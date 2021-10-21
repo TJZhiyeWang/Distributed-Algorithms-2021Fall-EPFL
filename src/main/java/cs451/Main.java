@@ -84,11 +84,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        // After a process finishes broadcasting,
-        // it waits forever for the delivery of messages.
-//        while (true) {
-//            // Sleep for 1 hour
-//            Thread.sleep(60 * 60 * 1000);
-//        }
+//         After a process finishes broadcasting,
+//         it waits forever for the delivery of messages.
+        while (true) {
+            // Sleep for 1 hour
+            Thread.sleep(60 * 60 * 1000);
+        }
     }
 }
