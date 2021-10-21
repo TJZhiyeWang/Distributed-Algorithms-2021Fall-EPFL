@@ -7,10 +7,10 @@ import java.util.List;
 public class Constant {
     public static final String BROADCAST = "b";
     public static final String DELIVER = "d";
-    public static final int RECEIVEINTERVAL = 50; //Interval between sending same message
-    public static final int SENDINTERVAL = 100;
+    public static final int RECEIVEINTERVAL = 10; //Interval between sending same message
+    public static final int SENDINTERVAL = 50;
     public static final int NOTFOUND = -1;
-    public static final int BUFFER_SIZE = 3000;
+    public static final int BUFFER_SIZE = 300000;
 
     public static final String getIpFromHosts(List<Host> hosts, int processId){
         return hosts.get(processId - 1).getIp();
