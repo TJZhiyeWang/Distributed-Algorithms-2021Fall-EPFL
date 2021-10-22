@@ -23,7 +23,7 @@ public class Listener implements Runnable {
     @Override
     public void run(){
         while(flag){
-            try {
+//            try {
                 Record record = perfectLink.deliver(perfectLink.receive());
                 if (record != null) {
                     int srcProcess = Constant.getProcessIdFromIpAndPort(hosts, record.ipAddress, record.port);
@@ -31,10 +31,10 @@ public class Listener implements Runnable {
                     logger.log(log);
                     System.out.println(log);
                 }
-                Thread.sleep(Constant.RECEIVEINTERVAL);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+//                Thread.sleep(Constant.RECEIVEINTERVAL);
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
         }
     }
 
