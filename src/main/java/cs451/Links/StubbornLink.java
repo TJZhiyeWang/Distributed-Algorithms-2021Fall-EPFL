@@ -8,32 +8,33 @@ import cs451.Utils.Record;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class StubbornLink implements Link, Runnable{
 
-    public Queue<Record> queue;
+    public LinkedBlockingQueue<Record> queue;
     FairlossLink fairlossLink;
     public boolean flag = true;
     List hosts;
 
     public StubbornLink(int port, List hosts) {
         this.fairlossLink = new FairlossLink(port, hosts);
-        this.queue = new ConcurrentLinkedQueue<>();
+        this.queue = new LinkedBlockingQueue<Record>();
         this.hosts = hosts;
     }
     @Override
     public void run(){
         while(flag){
             try{
-                if(!queue.isEmpty()){
-                    for (int i=0; i<queue.size(); i++) {
-                        Record record = queue.poll();
-                        String ip = Constant.getIpFromHosts(hosts, record.i);
-                        int port = Constant.getPortFromHosts(hosts, record.i);
-                        send(record.m, ip, port);
-                        queue.offer(record);
-                    }
-                }
+                int j = 0;
+                do {
+                    Record record = this.queue.take();
+                    String ip = Constant.getIpFromHosts(hosts, record.i);
+                    int port = Constant.getPortFromHosts(hosts, record.i);
+                    send(record.m, ip, port);
+                    queue.put(record);
+                } while(j < queue.size());
                 Thread.sleep(Constant.SENDINTERVAL);
             }catch (InterruptedException e){
                 e.printStackTrace();

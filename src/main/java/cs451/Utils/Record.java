@@ -20,6 +20,6 @@ public class Record {
 
     @Override
     public int hashCode() {
-        return this.i * Constant.BIG_NUMBER + this.m.hashCode();
+        return this.i + this.m.hashCode();
     }
 }

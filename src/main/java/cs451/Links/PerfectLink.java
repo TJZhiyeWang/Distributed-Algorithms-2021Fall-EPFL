@@ -35,7 +35,11 @@ public class PerfectLink implements Link{
         String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
         logger.log(log);
         int processId = Constant.getProcessIdFromIpAndPort(hosts, ip, port);
-        stubbornLink.queue.offer(new Record(m, processId));
+        try{
+        stubbornLink.queue.put(new Record(m, processId));
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

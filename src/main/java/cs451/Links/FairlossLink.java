@@ -13,10 +13,19 @@ public class FairlossLink implements Link{
 
     DatagramSocket socket;
     List hosts;
+//    ByteArrayOutputStream byteArrayOutputStream;
+//    ObjectOutputStream outputStream;
+
     public FairlossLink(int port, List hosts){
         try {
             this.socket = new DatagramSocket(port);
             this.hosts = hosts;
+//            this.byteArrayOutputStream = new ByteArrayOutputStream();
+//            try {
+//                this.outputStream = new ObjectOutputStream(this.byteArrayOutputStream);
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
         } catch (SocketException e){
             e.printStackTrace();
         }
@@ -26,14 +35,15 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-            ObjectOutputStream outputStream = new ObjectOutputStream(byteArray);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();;
+            ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
             outputStream.writeObject(m);
             outputStream.flush();
-            byte[] bytes = byteArray.toByteArray();
+            byte[] bytes = byteArrayOutputStream.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
-
+//            outputStream.reset();
+//            byteArrayOutputStream.reset();
         }catch (IOException e){
             e.printStackTrace();
         }
