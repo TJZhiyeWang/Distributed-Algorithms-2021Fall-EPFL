@@ -8,27 +8,20 @@ import cs451.Utils.Record;
 import java.io.*;
 import java.net.*;
 import java.util.List;
-
 public class FairlossLink implements Link{
 
     DatagramSocket socket;
     List hosts;
-//    ByteArrayOutputStream byteArrayOutputStream;
-//    ObjectOutputStream outputStream;
 
     public FairlossLink(int port, List hosts){
         try {
             this.socket = new DatagramSocket(port);
             int size = socket.getSendBufferSize();
             socket.setReceiveBufferSize(hosts.size() * size);
-
+            System.out.println(socket.getSendBufferSize());
+            System.out.println(socket.getReceiveBufferSize());
             this.hosts = hosts;
-//            this.byteArrayOutputStream = new ByteArrayOutputStream();
-//            try {
-//                this.outputStream = new ObjectOutputStream(this.byteArrayOutputStream);
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
+
         } catch (SocketException e){
             e.printStackTrace();
         }
@@ -45,8 +38,6 @@ public class FairlossLink implements Link{
             byte[] bytes = byteArrayOutputStream.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
-//            outputStream.reset();
-//            byteArrayOutputStream.reset();
         }catch (IOException e){
             e.printStackTrace();
         }

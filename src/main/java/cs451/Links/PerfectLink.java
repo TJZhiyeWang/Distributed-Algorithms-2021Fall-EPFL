@@ -25,7 +25,7 @@ public class PerfectLink implements Link{
         this.listener = new Listener(this, logger);
         tlistener = new Thread(this.listener);
         tlistener.start();
-        this.delivered = new HashSet<Record>();
+        this.delivered = new HashSet<Record>(Constant.HASHSET_CAPACITY);
         this.logger = logger;
         this.hosts = hosts;
     }
