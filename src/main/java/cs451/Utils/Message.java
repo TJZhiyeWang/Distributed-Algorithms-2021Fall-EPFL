@@ -19,6 +19,6 @@ public class Message implements Serializable {
 
     @Override
     public int hashCode() {
-        return this.payload.length;
+        return new String(this.payload).hashCode();
     }
 }
