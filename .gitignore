@@ -30,3 +30,7 @@ bin/da_proc.jar
 hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/java
+example/output/2.output
+example/output/1.output
+example/output/1.output
+example/output/2.output
