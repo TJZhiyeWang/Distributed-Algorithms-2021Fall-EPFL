@@ -22,9 +22,11 @@ public class StubbornLink implements Link, Runnable{
         while(flag){
             try{
                 if(!queue.isEmpty()){
-                    Record record = queue.poll();
-                    send(record.m, record.ipAddress, record.port);
-                    queue.offer(record);
+                    for (int i=0; i<queue.size(); i++) {
+                        Record record = queue.poll();
+                        send(record.m, record.ipAddress, record.port);
+                        queue.offer(record);
+                    }
                 }
                 Thread.sleep(Constant.SENDINTERVAL);
             }catch (InterruptedException e){
