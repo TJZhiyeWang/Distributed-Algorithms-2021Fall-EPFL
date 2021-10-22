@@ -27,7 +27,7 @@ public class FairlossLink implements Link{
     public void send(Message m, String ip, int port) {
         try {
             ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-            ObjectOutputStream outputStream = new ObjectOutputStream(new BufferedOutputStream(byteArray));
+            ObjectOutputStream outputStream = new ObjectOutputStream(byteArray);
             outputStream.writeObject(m);
             outputStream.flush();
             byte[] bytes = byteArray.toByteArray();
@@ -47,8 +47,8 @@ public class FairlossLink implements Link{
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
             socket.receive(packet);
-            byte[] data = packet.getData();
-            ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(new ByteArrayInputStream(data)));
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream (packet.getData());
+            ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream);
             try{
                 Object obj = inputStream.readObject();
                 if (obj instanceof Message){

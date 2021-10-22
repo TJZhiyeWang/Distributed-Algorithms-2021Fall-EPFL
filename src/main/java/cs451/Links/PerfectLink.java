@@ -32,7 +32,7 @@ public class PerfectLink implements Link{
 
     @Override
     public void send(Message m, String ip, int port){
-        String log = Constant.BROADCAST + " " + m.payload + "\n";
+        String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
         logger.log(log);
         int processId = Constant.getProcessIdFromIpAndPort(hosts, ip, port);
         stubbornLink.queue.offer(new Record(m, processId));

@@ -23,7 +23,7 @@ public class Listener implements Runnable {
         while(flag){
             Record record = perfectLink.deliver(perfectLink.receive());
             if (record != null) {
-                String log = Constant.DELIVER + " " + record.i + " " + record.m.payload + "\n";
+                String log = Constant.DELIVER + " " + record.i + " " + new String(record.m.payload) + "\n";
                 logger.log(log);
             }
         }
