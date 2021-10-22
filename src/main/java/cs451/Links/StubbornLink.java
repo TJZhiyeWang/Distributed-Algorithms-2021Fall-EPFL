@@ -35,7 +35,7 @@ public class StubbornLink implements Link, Runnable{
                     send(record.m, ip, port);
                     queue.put(record);
                     j = j + 1;
-                } while(j < queue.size());
+                } while(j < 10000);
                 Thread.sleep(Constant.SENDINTERVAL);
             }catch (InterruptedException e){
                 e.printStackTrace();
