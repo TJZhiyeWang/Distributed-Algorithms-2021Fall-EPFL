@@ -17,23 +17,25 @@ public class PerfectLink implements Link{
     Listener listener;
     Thread tstubborn;
     Thread tlistener;
+    List hosts;
     public PerfectLink(int port, Logger logger, List hosts){
-        this.stubbornLink = new StubbornLink(port);
+        this.stubbornLink = new StubbornLink(port, hosts);
         tstubborn = new Thread(this.stubbornLink);
         tstubborn.start();
-        this.listener = new Listener(this, logger, hosts);
+        this.listener = new Listener(this, logger);
         tlistener = new Thread(this.listener);
         tlistener.start();
         this.delivered = new HashSet<Record>();
         this.logger = logger;
+        this.hosts = hosts;
     }
 
     @Override
     public void send(Message m, String ip, int port){
         String log = Constant.BROADCAST + " " + m.payload + "\n";
         logger.log(log);
-        System.out.println(log);
-        stubbornLink.queue.offer(new Record(m, ip, port));
+        int processId = Constant.getProcessIdFromIpAndPort(hosts, ip, port);
+        stubbornLink.queue.offer(new Record(m, processId));
     }
 
     @Override

@@ -1,9 +1,11 @@
 package cs451.Links;
 
+import cs451.Host;
 import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -12,10 +14,12 @@ public class StubbornLink implements Link, Runnable{
     public Queue<Record> queue;
     FairlossLink fairlossLink;
     public boolean flag = true;
+    List hosts;
 
-    public StubbornLink(int port) {
-        this.fairlossLink = new FairlossLink(port);
+    public StubbornLink(int port, List hosts) {
+        this.fairlossLink = new FairlossLink(port, hosts);
         this.queue = new ConcurrentLinkedQueue<>();
+        this.hosts = hosts;
     }
     @Override
     public void run(){
@@ -24,7 +28,9 @@ public class StubbornLink implements Link, Runnable{
                 if(!queue.isEmpty()){
                     for (int i=0; i<queue.size(); i++) {
                         Record record = queue.poll();
-                        send(record.m, record.ipAddress, record.port);
+                        String ip = Constant.getIpFromHosts(hosts, record.i);
+                        int port = Constant.getPortFromHosts(hosts, record.i);
+                        send(record.m, ip, port);
                         queue.offer(record);
                     }
                 }

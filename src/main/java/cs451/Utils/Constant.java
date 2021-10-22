@@ -10,7 +10,8 @@ public class Constant {
     public static final int RECEIVEINTERVAL = 5; //Interval between sending same message
     public static final int SENDINTERVAL = 2000;
     public static final int NOTFOUND = -1;
-    public static final int BUFFER_SIZE = 300000;
+    public static final int BUFFER_SIZE = 5000000;
+    public static final int BIG_NUMBER = 100000;
 
     public static final String getIpFromHosts(List<Host> hosts, int processId){
         return hosts.get(processId - 1).getIp();

@@ -1,17 +1,22 @@
 package cs451.Links;
 
+import cs451.Host;
+import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 public class FairlossLink implements Link{
 
     DatagramSocket socket;
-    public FairlossLink(int port){
+    List hosts;
+    public FairlossLink(int port, List hosts){
         try {
             this.socket = new DatagramSocket(port);
+            this.hosts = hosts;
         } catch (SocketException e){
             e.printStackTrace();
         }
@@ -47,7 +52,8 @@ public class FairlossLink implements Link{
             try{
                 Object obj = inputStream.readObject();
                 if (obj instanceof Message){
-                    Record record = new Record((Message) obj, packet.getAddress().getHostAddress(), packet.getPort());
+                    int i = Constant.getProcessIdFromIpAndPort(hosts, packet.getAddress().getHostAddress(), packet.getPort());
+                    Record record = new Record((Message) obj, i);
                     return record;
                 }
 
