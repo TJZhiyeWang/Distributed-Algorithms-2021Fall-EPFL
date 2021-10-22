@@ -67,8 +67,6 @@ public class Main {
             Scanner scan = new Scanner(new FileReader(parser.config()));
             int messageNum = Integer.parseInt(scan.next());//how many messages each process should send
             int destinationProcess = Integer.parseInt(scan.next());//process should receive the messages
-            System.out.println("Total number to send: " + messageNum);
-            System.out.println("Destination process to send all the message: " + destinationProcess);
             Host host = parser.hosts().get(parser.myId()-1);
             logger = new Logger(parser.output());
             perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());

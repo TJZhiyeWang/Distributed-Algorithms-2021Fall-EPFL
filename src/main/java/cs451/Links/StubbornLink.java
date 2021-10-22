@@ -19,7 +19,6 @@ public class StubbornLink implements Link, Runnable{
     }
     @Override
     public void run(){
-        System.out.println(flag);
         while(flag){
             try{
                 if(!queue.isEmpty()){
