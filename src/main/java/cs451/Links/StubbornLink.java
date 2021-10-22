@@ -6,9 +6,6 @@ import cs451.Utils.Message;
 import cs451.Utils.Record;
 
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StubbornLink implements Link, Runnable{
@@ -34,7 +31,7 @@ public class StubbornLink implements Link, Runnable{
                     int port = Constant.getPortFromHosts(hosts, record.i);
                     send(record.m, ip, port);
                     queue.put(record);
-                    j = j + 1;
+//                    j = j + 1;
                 } while(j < Constant.SEND_MESSAGE);
                 Thread.sleep(Constant.SENDINTERVAL);
             }catch (InterruptedException e){

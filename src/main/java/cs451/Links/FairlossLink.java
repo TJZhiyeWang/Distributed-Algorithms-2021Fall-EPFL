@@ -16,10 +16,10 @@ public class FairlossLink implements Link{
     public FairlossLink(int port, List hosts){
         try {
             this.socket = new DatagramSocket(port);
-            int size = socket.getSendBufferSize();
-            socket.setReceiveBufferSize(hosts.size() * size);
-            System.out.println(socket.getSendBufferSize());
-            System.out.println(socket.getReceiveBufferSize());
+//            int size = socket.getSendBufferSize();
+//            socket.setReceiveBufferSize(hosts.size() * size);
+//            System.out.println(socket.getSendBufferSize());
+//            System.out.println(socket.getReceiveBufferSize());
             this.hosts = hosts;
 
         } catch (SocketException e){
