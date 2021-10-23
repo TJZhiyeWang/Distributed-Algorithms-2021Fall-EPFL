@@ -27,11 +27,13 @@ public class StubbornLink implements Link, Runnable{
     }
     @Override
     public void run(){
-//        try {
-//            Thread.sleep(Constant.SENDINTERVAL);
-//        }catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(Constant.SENDINTERVAL);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        long start = System.currentTimeMillis();
+
         while(flag){
             try{
                 Record record = this.queue.take();
@@ -41,6 +43,7 @@ public class StubbornLink implements Link, Runnable{
                 }
                 send(record.m, record.ip, record.port);
                 queue.put(record);
+
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
