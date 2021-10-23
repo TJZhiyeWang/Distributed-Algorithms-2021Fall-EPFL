@@ -6,6 +6,9 @@ import cs451.Utils.Logger;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,10 +35,15 @@ public class PerfectLink implements Link{
 
     @Override
     public void send(Message m, String ip, int port){
-        String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
-        logger.log(log);
+        ByteArrayInputStream bintput = new ByteArrayInputStream(m.payload);
+        DataInputStream dintput = new DataInputStream(bintput);
+        try {
+            String log = Constant.BROADCAST + " " + dintput.readInt() + "\n";
+            logger.log(log);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
         try{
-//            stubbornLink.send(m, ip, port);
             stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){
             e.printStackTrace();
@@ -59,7 +67,8 @@ public class PerfectLink implements Link{
     }
 
     public void ack(Record record){
-        Message m = new Message(record.m.payload, Constant.ACK);
+        Message m = new Message(record.m.payload);
+        m.toACK();
 //        System.out.println("send ack:" + record.i + new String(record.m.payload));
         this.stubbornLink.send(m, record.ip, record.port);
     }

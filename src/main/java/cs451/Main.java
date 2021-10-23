@@ -74,7 +74,14 @@ public class Main {
             if (parser.myId() != destinationProcess){
                 for (Integer j = 1; j <= messageNum; j++){
                     //build message
-                    Message m = new Message(j.toString().getBytes(), Constant.SEND);
+                    ByteArrayOutputStream boutput = new ByteArrayOutputStream();
+                    DataOutputStream doutput = new DataOutputStream(boutput);
+                    try{
+                        doutput.writeInt(j);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    Message m = new Message(boutput.toByteArray());
                     perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
                 }
             }

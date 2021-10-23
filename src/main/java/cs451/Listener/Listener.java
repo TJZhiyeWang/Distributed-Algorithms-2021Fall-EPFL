@@ -6,6 +6,9 @@ import cs451.Utils.Constant;
 import cs451.Utils.Logger;
 import cs451.Utils.Record;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class Listener implements Runnable {
@@ -29,8 +32,14 @@ public class Listener implements Runnable {
                 if (record != null) {
 //                    System.out.println("receive packet:" + tmp.i + " " + new String(tmp.m.payload));
                     int process = Constant.getProcessIdFromIpAndPort(hosts, record.ip, record.port);
-                    String log = Constant.DELIVER + " " + process + " " + new String(record.m.payload) + "\n";
-                    logger.log(log);
+                    ByteArrayInputStream bintput = new ByteArrayInputStream(record.m.payload);
+                    DataInputStream dintput = new DataInputStream(bintput);
+                    try{
+                        String log = Constant.DELIVER + " " + process + " " + dintput.readInt() + "\n";
+                        logger.log(log);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
             }else if(tmp.m.flag == Constant.ACK) {
 //                System.out.println("receive ack:" + tmp.i + new String(tmp.m.payload));

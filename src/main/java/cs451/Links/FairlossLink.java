@@ -29,11 +29,7 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();;
-            ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-            outputStream.writeObject(m);
-            outputStream.flush();
-            byte[] bytes = byteArrayOutputStream.toByteArray();
+            byte[] bytes = m.mergeToByteStream();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
         }catch (IOException e){
@@ -45,22 +41,13 @@ public class FairlossLink implements Link{
      */
     @Override
     public Record receive() {
-        byte[] container = new byte[128];
+        byte[] container = new byte[16];
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
             socket.receive(packet);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream (packet.getData());
-            ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream);
-            try{
-                Object obj = inputStream.readObject();
-                if (obj instanceof Message){
-                    Record record = new Record((Message) obj, packet.getAddress().getHostAddress(), packet.getPort());
-                    return record;
-                }
-
-            }catch (ClassNotFoundException e){
-                e.printStackTrace();
-            }
+            Message m = Message.parseByteStreamToMessage(packet);
+            Record record = new Record(m, packet.getAddress().getHostAddress(), packet.getPort());
+            return record;
         }catch (IOException e){
             e.printStackTrace();
         }
