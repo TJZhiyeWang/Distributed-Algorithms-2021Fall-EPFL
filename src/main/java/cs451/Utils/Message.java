@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class Message implements Serializable {
     public byte[] payload;
-    public int flag;
-    public Message(byte[] payload, int flag){
+    public boolean flag;
+    public Message(byte[] payload, boolean flag){
         this.payload = payload;
         this.flag = flag;
     }

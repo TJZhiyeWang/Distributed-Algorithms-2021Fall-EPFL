@@ -15,8 +15,8 @@ public class Constant {
     public static final int HASHSET_CAPACITY = (int)Math.pow(2,10);
     public static final int SEND_MESSAGE = 5000;
 
-    public static final int SEND = 1;
-    public static final int ACK = 2;
+    public static final boolean SEND = true;
+    public static final boolean ACK = false;
 
     public static final String getIpFromHosts(List<Host> hosts, int processId){
         return hosts.get(processId - 1).getIp();
