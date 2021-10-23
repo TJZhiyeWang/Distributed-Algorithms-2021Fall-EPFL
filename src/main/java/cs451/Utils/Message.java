@@ -22,20 +22,6 @@ public class Message implements Serializable {
         return tmp;
     }
 
-    public static Message parseByteStreamToMessage(DatagramPacket packet){
-        byte[] tmp = new byte[packet.getLength()];
-        byte[] stream = packet.getData();
-        System.arraycopy(stream, 0, tmp, 0, packet.getLength());
-        boolean flag = stream[packet.getLength() - 1]==(byte) 1? Constant.SEND: Constant.ACK;
-        Message m = new Message(tmp);
-        if (flag) {
-            return m;
-        } else{
-            m.toACK();
-            return m;
-        }
-    }
-
 
     @Override
     public boolean equals(Object obj){

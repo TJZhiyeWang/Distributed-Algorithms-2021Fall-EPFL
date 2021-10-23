@@ -45,7 +45,7 @@ public class FairlossLink implements Link{
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
             socket.receive(packet);
-            Message m = Message.parseByteStreamToMessage(packet);
+            Message m = Constant.parseByteStreamToMessage(packet);
             Record record = new Record(m, packet.getAddress().getHostAddress(), packet.getPort());
             return record;
         }catch (IOException e){

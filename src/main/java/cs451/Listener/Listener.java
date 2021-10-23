@@ -1,6 +1,4 @@
 package cs451.Listener;
-
-import cs451.Host;
 import cs451.Links.PerfectLink;
 import cs451.Utils.Constant;
 import cs451.Utils.Logger;

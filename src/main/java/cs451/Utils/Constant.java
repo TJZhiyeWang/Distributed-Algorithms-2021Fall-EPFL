@@ -2,6 +2,8 @@ package cs451.Utils;
 
 import cs451.Host;
 
+import java.net.DatagramPacket;
+import java.util.Arrays;
 import java.util.List;
 
 public class Constant {
@@ -32,5 +34,17 @@ public class Constant {
                 return host.getId();
         }
         return NOTFOUND;
+    }
+
+    public static Message parseByteStreamToMessage(DatagramPacket packet){
+        byte[] stream = packet.getData();
+        boolean flag = stream[packet.getLength() - 1]==(byte) 1? Constant.SEND: Constant.ACK;
+        Message m = new Message(Arrays.copyOf(stream, packet.getLength()-1));
+        if (flag) {
+            return m;
+        } else{
+            m.toACK();
+            return m;
+        }
     }
 }
