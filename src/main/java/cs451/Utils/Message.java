@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Message implements Serializable {
-    public byte[] payload;
+    public int payload;
     public boolean flag;
-    public Message(byte[] payload, boolean flag){
+    public Message(int payload, boolean flag){
         this.payload = payload;
         this.flag = flag;
     }
@@ -14,13 +14,13 @@ public class Message implements Serializable {
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Message){
-            return (Arrays.equals(this.payload, ((Message) obj).payload));
+            return this.payload == ((Message) obj).payload;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return new String(this.payload).hashCode();
+        return this.payload;
     }
 }
