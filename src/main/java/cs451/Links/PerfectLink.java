@@ -35,6 +35,7 @@ public class PerfectLink implements Link{
         String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
         logger.log(log);
         try{
+            stubbornLink.send(m, ip, port);
             stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){
             e.printStackTrace();

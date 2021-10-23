@@ -8,6 +8,7 @@ import cs451.Utils.Record;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StubbornLink implements Link, Runnable{
@@ -26,11 +27,14 @@ public class StubbornLink implements Link, Runnable{
     }
     @Override
     public void run(){
+        try {
+            Thread.sleep(Constant.SENDINTERVAL);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
         while(flag){
             try{
                 Record record = this.queue.take();
-//                System.out.println("queue size: "+queue.size());
-//                System.out.println("set size: "+sent.size());
                 if (sent.contains(record)){
                     sent.remove(record);
                     continue;
