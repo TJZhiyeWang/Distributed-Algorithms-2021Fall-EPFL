@@ -29,13 +29,13 @@ public class StubbornLink implements Link, Runnable{
         while(flag){
             try{
                 Record record = this.queue.take();
+//                System.out.println("queue size: "+queue.size());
+//                System.out.println("set size: "+sent.size());
                 if (sent.contains(record)){
                     sent.remove(record);
                     continue;
                 }
-                String ip = Constant.getIpFromHosts(hosts, record.i);
-                int port = Constant.getPortFromHosts(hosts, record.i);
-                send(record.m, ip, port);
+                send(record.m, record.ip, record.port);
                 queue.put(record);
             }catch (InterruptedException e){
                 e.printStackTrace();

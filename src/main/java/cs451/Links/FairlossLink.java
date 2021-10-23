@@ -56,8 +56,7 @@ public class FairlossLink implements Link{
             try{
                 Object obj = inputStream.readObject();
                 if (obj instanceof Message){
-                    int i = Constant.getProcessIdFromIpAndPort(hosts, packet.getAddress().getHostAddress(), packet.getPort());
-                    Record record = new Record((Message) obj, i);
+                    Record record = new Record((Message) obj, packet.getAddress().getHostAddress(), packet.getPort());
                     return record;
                 }
 

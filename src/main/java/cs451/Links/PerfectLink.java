@@ -22,7 +22,7 @@ public class PerfectLink implements Link{
         this.stubbornLink = new StubbornLink(port, hosts);
         tstubborn = new Thread(this.stubbornLink);
         tstubborn.start();
-        this.listener = new Listener(this, logger);
+        this.listener = new Listener(this, logger, hosts);
         tlistener = new Thread(this.listener);
         tlistener.start();
         this.delivered = new HashSet<Record>();
@@ -34,9 +34,8 @@ public class PerfectLink implements Link{
     public void send(Message m, String ip, int port){
         String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
         logger.log(log);
-        int processId = Constant.getProcessIdFromIpAndPort(hosts, ip, port);
         try{
-            stubbornLink.queue.put(new Record(m, processId));
+            stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){
             e.printStackTrace();
         }
@@ -61,7 +60,7 @@ public class PerfectLink implements Link{
     public void ack(Record record){
         Message m = new Message(record.m.payload, Constant.ACK);
 //        System.out.println("send ack:" + record.i + new String(record.m.payload));
-        this.stubbornLink.send(m, Constant.getIpFromHosts(hosts, record.i),Constant.getPortFromHosts(hosts, record.i));
+        this.stubbornLink.send(m, record.ip, record.port);
     }
 
     public void dequeue(Record record){
