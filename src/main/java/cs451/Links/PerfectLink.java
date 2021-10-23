@@ -28,7 +28,7 @@ public class PerfectLink implements Link{
         this.listener = new Listener(this, logger, hosts);
         tlistener = new Thread(this.listener);
         tlistener.start();
-        this.delivered = new HashSet<Record>();
+        this.delivered = new HashSet<Record>(4096);
         this.logger = logger;
         this.hosts = hosts;
     }
@@ -39,6 +39,7 @@ public class PerfectLink implements Link{
         String log = Constant.BROADCAST + " " + Constant.byteArrayToInt(m.payload, 0) + "\n";
         logger.log(log);
         try{
+            stubbornLink.send(m, ip, port);
             stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){
             e.printStackTrace();
