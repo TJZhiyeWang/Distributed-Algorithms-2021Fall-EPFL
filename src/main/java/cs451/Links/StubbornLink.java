@@ -27,11 +27,11 @@ public class StubbornLink implements Link, Runnable{
     }
     @Override
     public void run(){
-        try {
-            Thread.sleep(Constant.SENDINTERVAL);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(Constant.SENDINTERVAL);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
         while(flag){
             try{
                 Record record = this.queue.take();
