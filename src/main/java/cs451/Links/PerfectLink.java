@@ -35,14 +35,9 @@ public class PerfectLink implements Link{
 
     @Override
     public void send(Message m, String ip, int port){
-        ByteArrayInputStream bintput = new ByteArrayInputStream(m.payload);
-        DataInputStream dintput = new DataInputStream(bintput);
-        try {
-            String log = Constant.BROADCAST + " " + dintput.readInt() + "\n";
-            logger.log(log);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        String log = Constant.BROADCAST + " " + Constant.byteArrayToInt(m.payload, 0) + "\n";
+        logger.log(log);
         try{
             stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){

@@ -72,16 +72,9 @@ public class Main {
             perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());
             System.out.println("Broadcasting and delivering messages...\n");
             if (parser.myId() != destinationProcess){
-                for (Integer j = 1; j <= messageNum; j++){
+                for (int j = 1; j <= messageNum; j++){
                     //build message
-                    ByteArrayOutputStream boutput = new ByteArrayOutputStream();
-                    DataOutputStream doutput = new DataOutputStream(boutput);
-                    try{
-                        doutput.writeInt(j);
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                    Message m = new Message(boutput.toByteArray());
+                    Message m = new Message(Constant.intToByteArray(j));
                     perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
                 }
             }
