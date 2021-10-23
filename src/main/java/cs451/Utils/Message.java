@@ -5,14 +5,16 @@ import java.util.Arrays;
 
 public class Message implements Serializable {
     public byte[] payload;
-    public Message(byte[] payload){
+    public int flag;
+    public Message(byte[] payload, int flag){
         this.payload = payload;
+        this.flag = flag;
     }
 
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Message){
-            return (Arrays.equals(this.payload, ((Message) obj).payload));
+            return (Arrays.equals(this.payload, ((Message) obj).payload) && this.flag == ((Message) obj).flag);
         }
         return false;
     }

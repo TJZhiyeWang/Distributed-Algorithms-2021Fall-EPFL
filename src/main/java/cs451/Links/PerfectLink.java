@@ -36,7 +36,7 @@ public class PerfectLink implements Link{
         logger.log(log);
         int processId = Constant.getProcessIdFromIpAndPort(hosts, ip, port);
         try{
-        stubbornLink.queue.put(new Record(m, processId));
+            stubbornLink.queue.put(new Record(m, processId));
         }catch (InterruptedException e){
             e.printStackTrace();
         }
@@ -50,12 +50,24 @@ public class PerfectLink implements Link{
     @Override
     public Record deliver(Record record){
         if (delivered.contains(record)) {
+            this.ack(record);
             return null;
         } else {
             delivered.add(record);
         }
         return record;
     }
+
+    public void ack(Record record){
+        Message m = new Message(record.m.payload, Constant.ACK);
+        this.stubbornLink.send(m, Constant.getIpFromHosts(hosts, record.i),Constant.getPortFromHosts(hosts, record.i));
+    }
+
+    public void dequeue(Record record){
+        stubbornLink.queue.remove(record);
+    }
+
+
 
     @Override
     public void close(){

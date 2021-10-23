@@ -17,23 +17,20 @@ public class StubbornLink implements Link, Runnable{
 
     public StubbornLink(int port, List hosts) {
         this.fairlossLink = new FairlossLink(port, hosts);
-        this.queue = new LinkedBlockingQueue<Record>();
+        this.queue = new LinkedBlockingQueue<Record>(2000);
         this.hosts = hosts;
     }
     @Override
     public void run(){
         while(flag){
             try{
-                int j = 0;
-                do {
-                    Record record = this.queue.take();
-                    String ip = Constant.getIpFromHosts(hosts, record.i);
-                    int port = Constant.getPortFromHosts(hosts, record.i);
-                    send(record.m, ip, port);
-                    queue.put(record);
-//                    j = j + 1;
-                } while(j < Constant.SEND_MESSAGE);
-                Thread.sleep(Constant.SENDINTERVAL);
+
+                Record record = this.queue.take();
+                String ip = Constant.getIpFromHosts(hosts, record.i);
+                int port = Constant.getPortFromHosts(hosts, record.i);
+                send(record.m, ip, port);
+                queue.put(record);
+
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

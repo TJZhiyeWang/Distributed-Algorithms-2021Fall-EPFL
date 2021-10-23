@@ -23,8 +23,12 @@ public class Listener implements Runnable {
         while(flag){
             Record record = perfectLink.deliver(perfectLink.receive());
             if (record != null) {
-                String log = Constant.DELIVER + " " + record.i + " " + new String(record.m.payload) + "\n";
-                logger.log(log);
+                if (record.m.flag == Constant.SEND){
+                    String log = Constant.DELIVER + " " + record.i + " " + new String(record.m.payload) + "\n";
+                    logger.log(log);
+                }else if(record.m.flag == Constant.ACK){
+                    perfectLink.dequeue(record);
+                }
             }
         }
     }
