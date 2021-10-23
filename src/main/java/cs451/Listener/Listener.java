@@ -21,14 +21,17 @@ public class Listener implements Runnable {
     @Override
     public void run(){
         while(flag){
-            Record record = perfectLink.deliver(perfectLink.receive());
-            if (record != null) {
-                if (record.m.flag == Constant.SEND){
+            Record tmp = perfectLink.receive();
+            if (tmp.m.flag == Constant.SEND){
+                Record record = perfectLink.deliver(tmp);
+                if (record != null) {
+                    System.out.println("receive packet:" + tmp.i + " " + new String(tmp.m.payload));
                     String log = Constant.DELIVER + " " + record.i + " " + new String(record.m.payload) + "\n";
                     logger.log(log);
-                }else if(record.m.flag == Constant.ACK){
-                    perfectLink.dequeue(record);
                 }
+            }else if(tmp.m.flag == Constant.ACK) {
+//                System.out.println("receive ack:" + tmp.i + new String(tmp.m.payload));
+                perfectLink.dequeue(tmp);
             }
         }
     }

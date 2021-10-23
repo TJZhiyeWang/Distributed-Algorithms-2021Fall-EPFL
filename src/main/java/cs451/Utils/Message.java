@@ -14,7 +14,7 @@ public class Message implements Serializable {
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Message){
-            return (Arrays.equals(this.payload, ((Message) obj).payload) && this.flag == ((Message) obj).flag);
+            return (Arrays.equals(this.payload, ((Message) obj).payload));
         }
         return false;
     }

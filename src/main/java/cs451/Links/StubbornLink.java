@@ -5,7 +5,9 @@ import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class StubbornLink implements Link, Runnable{
@@ -14,23 +16,27 @@ public class StubbornLink implements Link, Runnable{
     FairlossLink fairlossLink;
     public boolean flag = true;
     List hosts;
+    public HashSet<Record> sent;
 
     public StubbornLink(int port, List hosts) {
         this.fairlossLink = new FairlossLink(port, hosts);
-        this.queue = new LinkedBlockingQueue<Record>(2000);
+        this.queue = new LinkedBlockingQueue<Record>();
         this.hosts = hosts;
+        this.sent = new HashSet<>();
     }
     @Override
     public void run(){
         while(flag){
             try{
-
                 Record record = this.queue.take();
+                if (sent.contains(record)){
+                    sent.remove(record);
+                    continue;
+                }
                 String ip = Constant.getIpFromHosts(hosts, record.i);
                 int port = Constant.getPortFromHosts(hosts, record.i);
                 send(record.m, ip, port);
                 queue.put(record);
-
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

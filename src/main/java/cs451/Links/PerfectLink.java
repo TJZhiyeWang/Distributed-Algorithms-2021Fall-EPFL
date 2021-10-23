@@ -60,11 +60,12 @@ public class PerfectLink implements Link{
 
     public void ack(Record record){
         Message m = new Message(record.m.payload, Constant.ACK);
+//        System.out.println("send ack:" + record.i + new String(record.m.payload));
         this.stubbornLink.send(m, Constant.getIpFromHosts(hosts, record.i),Constant.getPortFromHosts(hosts, record.i));
     }
 
     public void dequeue(Record record){
-        stubbornLink.queue.remove(record);
+        stubbornLink.sent.add(record);
     }
 
 
