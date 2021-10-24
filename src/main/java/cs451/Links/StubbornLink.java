@@ -27,16 +27,16 @@ public class StubbornLink implements Link, Runnable{
     }
     @Override
     public void run(){
-        try{
-            Thread.sleep(Constant.SENDINTERVAL);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+//        try{
+//            Thread.sleep(Constant.SENDINTERVAL);
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
         while(flag){
             try{
                     Record record = this.queue.take();
-                    System.out.println("queue size: " + queue.size());
-                    System.out.println("set size: " + sent.size());
+//                    System.out.println("queue size: " + queue.size());
+//                    System.out.println("set size: " + sent.size());
                     if (sent.contains(record)) {
                         sent.remove(record);
                         continue;

@@ -40,7 +40,7 @@ public class PerfectLink implements Link{
         String log = Constant.BROADCAST + " " + new String(Arrays.copyOf(m.payload, m.length)) + "\n";
         logger.log(log);
         try{
-            stubbornLink.send(m, ip, port);
+//            stubbornLink.send(m, ip, port);
             stubbornLink.queue.put(new Record(m, ip, port));
         }catch (InterruptedException e){
             e.printStackTrace();
