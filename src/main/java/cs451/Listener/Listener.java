@@ -7,6 +7,7 @@ import cs451.Utils.Record;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class Listener implements Runnable {
@@ -30,7 +31,8 @@ public class Listener implements Runnable {
                 if (record != null) {
 //                    System.out.println("receive packet:" + tmp.i + " " + new String(tmp.m.payload));
                     int process = Constant.getProcessIdFromIpAndPort(hosts, record.ip, record.port);
-                    String log = Constant.DELIVER + " " + process + " " + Constant.byteArrayToInt(record.m.payload, 0) + "\n";
+
+                    String log = Constant.DELIVER + " " + process + " " + new String(Arrays.copyOf(record.m.payload, record.m.length)) + "\n";
                     logger.log(log);
                 }
             }else if(tmp.m.flag == Constant.ACK) {

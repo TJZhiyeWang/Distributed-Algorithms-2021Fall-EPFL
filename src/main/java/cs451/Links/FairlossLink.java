@@ -7,6 +7,7 @@ import cs451.Utils.Record;
 
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 import java.util.List;
 public class FairlossLink implements Link{
 
@@ -29,8 +30,7 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            byte[] bytes = m.mergeToByteStream();
-            DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
+            DatagramPacket packet = new DatagramPacket(m.payload, 0, m.payload.length, new InetSocketAddress(ip, port));
             socket.send(packet);
         }catch (IOException e){
             e.printStackTrace();
@@ -41,11 +41,11 @@ public class FairlossLink implements Link{
      */
     @Override
     public Record receive() {
-        byte[] container = new byte[16];
+        byte[] container = new byte[128];
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
             socket.receive(packet);
-            Message m = Constant.parseByteStreamToMessage(packet);
+            Message m = new Message(Arrays.copyOf(packet.getData(), packet.getLength()), Constant.SEND);
             Record record = new Record(m, packet.getAddress().getHostAddress(), packet.getPort());
             return record;
         }catch (IOException e){

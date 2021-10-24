@@ -10,7 +10,7 @@ public class Constant {
     public static final String BROADCAST = "b";
     public static final String DELIVER = "d";
     public static final int RECEIVEINTERVAL = 5; //Interval between sending same message
-    public static final int SENDINTERVAL = 1000;
+    public static final int SENDINTERVAL = 500;
     public static final int NOTFOUND = -1;
     public static final int BUFFER_SIZE = 1000000;
     public static final int BIG_NUMBER = 100000;
@@ -36,17 +36,17 @@ public class Constant {
         return NOTFOUND;
     }
 
-    public static Message parseByteStreamToMessage(DatagramPacket packet){
-        byte[] stream = packet.getData();
-        boolean flag = stream[packet.getLength() - 1]==(byte) 1? Constant.SEND: Constant.ACK;
-        Message m = new Message(Arrays.copyOf(stream, packet.getLength()-1));
-        if (flag) {
-            return m;
-        } else{
-            m.toACK();
-            return m;
-        }
-    }
+//    public static Message parseByteStreamToMessage(DatagramPacket packet){
+//        byte[] stream = packet.getData();
+//        boolean flag = stream[packet.getLength() - 1]==(byte) 1? Constant.SEND: Constant.ACK;
+//        Message m = new Message(Arrays.copyOf(stream, packet.getLength()-1));
+//        if (flag) {
+//            return m;
+//        } else{
+//            m.toACK();
+//            return m;
+//        }
+//    }
 
     public static byte[] intToByteArray(int integer) {
         int byteNum = (40 -Integer.numberOfLeadingZeros (integer < 0 ? ~integer : integer))/ 8;

@@ -9,6 +9,7 @@ import cs451.Utils.Record;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class PerfectLink implements Link{
     @Override
     public void send(Message m, String ip, int port){
 
-        String log = Constant.BROADCAST + " " + Constant.byteArrayToInt(m.payload, 0) + "\n";
+        String log = Constant.BROADCAST + " " + new String(Arrays.copyOf(m.payload, m.length)) + "\n";
         logger.log(log);
         try{
             stubbornLink.send(m, ip, port);
@@ -63,7 +64,7 @@ public class PerfectLink implements Link{
     }
 
     public void ack(Record record){
-        Message m = new Message(record.m.payload);
+        Message m = new Message(record.m.payload, Constant.SEND);
         m.toACK();
 //        System.out.println("send ack:" + record.i + new String(record.m.payload));
         this.stubbornLink.send(m, record.ip, record.port);
