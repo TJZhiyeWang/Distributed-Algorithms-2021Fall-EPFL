@@ -29,7 +29,7 @@ public class Listener implements Runnable {
                 if (record != null) {
 //                    System.out.println("receive packet:" + tmp.i + " " + new String(tmp.m.payload));
                     int process = Constant.getProcessIdFromIpAndPort(hosts, record.ip, record.port);
-                    String log = Constant.DELIVER + " " + process + " " + new String(record.m.payload) + "\n";
+                    String log = Constant.DELIVER + " " + process + " " + Constant.byteArrayToInt(record.m.payload, 0) + "\n";
                     logger.log(log);
                 }
             }else if(tmp.m.flag == Constant.ACK) {

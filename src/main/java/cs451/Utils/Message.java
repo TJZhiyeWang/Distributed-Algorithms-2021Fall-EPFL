@@ -5,11 +5,15 @@ import java.util.Arrays;
 
 public class Message implements Serializable {
     public byte[] payload;
-    public boolean flag;
-    public Message(byte[] payload, boolean flag){
+    public boolean flag = Constant.SEND;
+    public Message(byte[] payload){
         this.payload = payload;
-        this.flag = flag;
     }
+
+    public void toAck(){
+        this.flag = Constant.ACK;
+    }
+
 
     @Override
     public boolean equals(Object obj){

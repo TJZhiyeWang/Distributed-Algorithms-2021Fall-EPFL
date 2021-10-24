@@ -36,10 +36,10 @@ public class StubbornLink implements Link, Runnable{
         while(flag){
             try{
                 Record record = this.queue.take();
-                if (queue.size() == 0) {
-                    long end = System.currentTimeMillis();
-                    System.out.println("execute time: " + (end - start) / 1000);
-                }
+//                if (queue.size() == 0) {
+//                    long end = System.currentTimeMillis();
+//                    System.out.println("execute time: " + (end - start) / 1000);
+//                }
 //                System.out.println("queue size: " + queue.size());
 //                System.out.println("set size: " + sent.size());
                 if (sent.contains(record)){

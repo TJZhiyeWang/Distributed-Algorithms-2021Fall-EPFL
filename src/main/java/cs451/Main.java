@@ -16,11 +16,12 @@ public class Main {
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
-        perfectLink.close();
+        if (perfectLink != null)
+            perfectLink.close();
         //write/flush output file if necessary
         System.out.println("Writing output.");
-
-        logger.close();
+        if (logger != null)
+            logger.close();
     }
 
     private static void initSignalHandlers() {
@@ -74,7 +75,7 @@ public class Main {
             if (parser.myId() != destinationProcess){
                 for (Integer j = 1; j <= messageNum; j++){
                     //build message
-                    Message m = new Message(j.toString().getBytes(), Constant.SEND);
+                    Message m = new Message(Constant.intToByteArray(j));
                     perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
                 }
             }

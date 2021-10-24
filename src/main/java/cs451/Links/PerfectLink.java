@@ -32,11 +32,11 @@ public class PerfectLink implements Link{
 
     @Override
     public void send(Message m, String ip, int port){
-        String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
-        logger.log(log);
         try{
             stubbornLink.send(m, ip, port);
             stubbornLink.queue.put(new Record(m, ip, port));
+            String log = Constant.BROADCAST + " " + Constant.byteArrayToInt(m.payload, 0) + "\n";
+            logger.log(log);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
@@ -59,7 +59,8 @@ public class PerfectLink implements Link{
     }
 
     public void ack(Record record){
-        Message m = new Message(record.m.payload, Constant.ACK);
+        Message m = new Message(record.m.payload);
+        m.toAck();
 //        System.out.println("send ack:" + record.i + new String(record.m.payload));
         this.stubbornLink.send(m, record.ip, record.port);
     }
