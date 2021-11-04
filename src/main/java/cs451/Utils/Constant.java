@@ -1,9 +1,5 @@
 package cs451.Utils;
 
-import cs451.Host;
-
-import java.net.DatagramPacket;
-import java.util.Arrays;
 import java.util.List;
 
 public class Constant {
@@ -19,16 +15,44 @@ public class Constant {
 
     public static final boolean SEND = true;
     public static final boolean ACK = false;
+    public static List<Host> hosts;
+    public static Logger logger;
+    public static int myself;
 
-    public static final String getIpFromHosts(List<Host> hosts, int processId){
+    public static void initHost(List hosts){
+        Constant.hosts = hosts;
+    }
+
+    public static void initlogger(Logger logger){
+        Constant.logger = logger;
+    }
+
+    public static void initMyself(int me){
+        Constant.myself = me;
+    }
+
+    public static int getMyself(){
+        return myself;
+    }
+
+    public static Logger getLogger(){
+        return logger;
+    }
+
+
+    public static List<Host> getHosts(){
+        return hosts;
+    }
+
+    public static final String getIpFromHosts(int processId){
         return hosts.get(processId - 1).getIp();
     }
 
-    public static final int getPortFromHosts(List<Host> hosts, int processId){
+    public static final int getPortFromHosts(int processId){
         return hosts.get(processId - 1).getPort();
     }
 
-    public static final int getProcessIdFromIpAndPort(List<Host> hosts, String ip, int port){
+    public static final int getProcessIdFromIpAndPort(String ip, int port){
         for (Host host:hosts){
             if (host.getIp().equals(ip) && host.getPort() == port)
                 return host.getId();
@@ -36,32 +60,4 @@ public class Constant {
         return NOTFOUND;
     }
 
-//    public static Message parseByteStreamToMessage(DatagramPacket packet){
-//        byte[] stream = packet.getData();
-//        boolean flag = stream[packet.getLength() - 1]==(byte) 1? Constant.SEND: Constant.ACK;
-//        Message m = new Message(Arrays.copyOf(stream, packet.getLength()-1));
-//        if (flag) {
-//            return m;
-//        } else{
-//            m.toACK();
-//            return m;
-//        }
-//    }
-
-    public static byte[] intToByteArray(int integer) {
-        int byteNum = (40 -Integer.numberOfLeadingZeros (integer < 0 ? ~integer : integer))/ 8;
-        byte[] byteArray = new byte[4];
-        for (int n = 0; n < byteNum; n++)
-            byteArray[3 - n] = (byte) (integer>>> (n * 8));
-        return (byteArray);
-    }
-
-    public static int byteArrayToInt(byte[] b, int offset) {
-        int value= 0;
-        for (int i = 0; i < 4; i++) {
-            int shift= (4 - 1 - i) * 8;
-            value +=(b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
 }

@@ -2,26 +2,24 @@ package cs451.Utils;
 
 public class Record {
     public Message m;
-    public int port;
-    public String ip;
+    public int i;
 
-    public Record(Message m, String ip, int port){
+    public Record(Message m, int i){
         this.m = m;
-        this.ip = ip;
-        this.port = port;
+        this.i = i;
     }
 
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Record){
             Record tmp = (Record) obj;
-            return (this.m.equals(tmp.m) && this.port == tmp.port && this.ip.equals(tmp.ip) );
+            return (this.m.equals(tmp.m) && this.i == tmp.i);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return this.ip.hashCode() + this.m.hashCode() + this.port;
+        return this.m.hashCode() + this.i;
     }
 }

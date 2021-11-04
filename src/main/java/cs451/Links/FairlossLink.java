@@ -1,26 +1,19 @@
 package cs451.Links;
 
-import cs451.Host;
 import cs451.Utils.Constant;
 import cs451.Utils.Message;
 import cs451.Utils.Record;
 
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
-import java.util.List;
+
 public class FairlossLink implements Link{
 
     DatagramSocket socket;
-    List hosts;
 
-    public FairlossLink(int port, List hosts){
+    public FairlossLink(int port){
         try {
             this.socket = new DatagramSocket(port);
-            int size = socket.getSendBufferSize();
-            socket.setReceiveBufferSize(hosts.size() * size);
-            this.hosts = hosts;
-
         } catch (SocketException e){
             e.printStackTrace();
         }
@@ -30,7 +23,12 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            DatagramPacket packet = new DatagramPacket(m.payload, 0, m.payload.length, new InetSocketAddress(ip, port));
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+            outputStream.writeObject(m);
+            outputStream.flush();
+            byte[] bytes = byteArrayOutputStream.toByteArray();
+            DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
         }catch (IOException e){
             e.printStackTrace();
@@ -45,9 +43,17 @@ public class FairlossLink implements Link{
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
         try {
             socket.receive(packet);
-            Message m = new Message(Arrays.copyOf(packet.getData(), packet.getLength()), Constant.SEND);
-            Record record = new Record(m, packet.getAddress().getHostAddress(), packet.getPort());
-            return record;
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream (packet.getData());
+            ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream);
+            try {
+                Object obj = inputStream.readObject();
+                if (obj instanceof Message) {
+                    Record record = new Record((Message) obj, Constant.getProcessIdFromIpAndPort(packet.getAddress().getHostAddress(), packet.getPort()));
+                    return record;
+                }
+            }catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -55,7 +61,7 @@ public class FairlossLink implements Link{
     }
 
     @Override
-    public Record deliver(Record m) { return m; }
+    public Record deliver() { return this.receive(); }
 
     @Override
     public void close(){ socket.close(); }

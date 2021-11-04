@@ -6,40 +6,28 @@ import java.util.Arrays;
 
 public class Message implements Serializable {
     public byte[] payload;
-    public byte[] info;
-    public int length;
+    public int sProcess;
     public boolean flag = Constant.SEND;
-    public Message(byte[] payload){
-        this.info = payload;
-        this.length = payload.length;
-        this.payload = new byte[payload.length + 1];
-        System.arraycopy(payload, 0, this.payload,0,this.length);
-        this.payload[payload.length] = this.flag? (byte)1 : (byte)0;
-
-    }
-    public Message(byte[] payload, boolean flag){
-        this.info = Arrays.copyOf(payload, payload.length-1);
+    public Message(byte[] payload, int sProcess){
         this.payload = payload;
-        this.length = payload.length - 1;
-        this.flag = payload[payload.length - 1]==(byte) 1? Constant.SEND: Constant.ACK;
+        this.sProcess = sProcess;
     }
 
-    public void toACK(){
-        this.flag = Constant.ACK;
-        this.payload[payload.length - 1] = this.flag? (byte)1 : (byte)0;
+    public void revert(){
+        this.flag = this.flag==Constant.ACK? Constant.SEND : Constant.ACK;
     }
 
 
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Message){
-            return new String(this.info).equals(new String(((Message) obj).info));
+            return new String(this.payload).equals(new String(((Message) obj).payload)) && this.sProcess == ((Message) obj).sProcess;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return new String(this.info).hashCode();
+        return new String(this.payload).hashCode() + this.sProcess;
     }
 }

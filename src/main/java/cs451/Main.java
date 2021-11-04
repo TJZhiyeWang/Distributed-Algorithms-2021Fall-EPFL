@@ -1,7 +1,9 @@
 package cs451;
 
-import cs451.Links.PerfectLink;
+import cs451.Broadcast.FIFOBroadcast;
+import cs451.Parser.Parser;
 import cs451.Utils.Constant;
+import cs451.Utils.Host;
 import cs451.Utils.Logger;
 import cs451.Utils.Message;
 
@@ -10,17 +12,14 @@ import java.util.Scanner;
 
 public class Main {
 
-    static PerfectLink perfectLink;
-    static Logger logger;
 
     private static void handleSignal() {
         //immediately stop network packet processing
         System.out.println("Immediately stopping network packet processing.");
-        perfectLink.close();
         //write/flush output file if necessary
         System.out.println("Writing output.");
 
-        logger.close();
+        Constant.getLogger().close();
     }
 
     private static void initSignalHandlers() {
@@ -66,18 +65,24 @@ public class Main {
         try{
             Scanner scan = new Scanner(new FileReader(parser.config()));
             int messageNum = Integer.parseInt(scan.next());//how many messages each process should send
-            int destinationProcess = Integer.parseInt(scan.next());//process should receive the messages
+            //init myself
             Host host = parser.hosts().get(parser.myId()-1);
-            logger = new Logger(parser.output());
-            perfectLink = new PerfectLink(host.getPort(), logger, parser.hosts());
+            Constant.initMyself(parser.myId());
+            //init logger
+            Logger logger = new Logger(parser.output());
+            Constant.initlogger(logger);
+            //init host
+            Constant.initHost(parser.hosts());
+
+            FIFOBroadcast fifoBroadcast = new FIFOBroadcast(host.getPort());
             System.out.println("Broadcasting and delivering messages...\n");
-            if (parser.myId() != destinationProcess){
-                for (int j = 1; j <= messageNum; j++){
-                    //build message
-                    Message m = new Message(String.valueOf(j).getBytes());
-                    perfectLink.send(m, Constant.getIpFromHosts(parser.hosts(), destinationProcess),Constant.getPortFromHosts(parser.hosts(), destinationProcess));
-                }
+
+            for (int j = 1; j <= messageNum; j++){
+                //build message
+                Message m = new Message(String.valueOf(j).getBytes(), parser.myId());
+                fifoBroadcast.broadcast(m);
             }
+
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }
