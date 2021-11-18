@@ -33,27 +33,16 @@ public class FIFOBroadcast extends Listener implements Broadcast{
     }
 
     @Override
-    public Record deliver(){
-        try {
-//            for (int i = 0; i < urBroadcast.shareQueue.size(); i++) {
-//                Message m = urBroadcast.shareQueue.take();
-//                int proc = m.sProcess;
-//                int lsn = m.seq;
-//                if (next[proc - 1] == lsn) {
-//                    next[proc - 1]++;
-//                    return new Record(m, m.sProcess);
-//                }
-//                urBroadcast.shareQueue.put(m);
-            //build a message and find whether the hashset has such kind of message
-            for (int proc = 1; proc <= Constant.getHosts().size(); proc++){
-                Pair p = new Pair(proc, next[proc-1]);
-                if (urBroadcast.sharedTable.containsKey(p)){
-                    next[proc-1]++;
-                    return new Record(urBroadcast.sharedTable.get(p), proc);
-                }
+    public Record deliver() {
+        //build a message and find whether the hashset has such kind of message
+        for (int proc = 1; proc <= Constant.getHosts().size(); proc++) {
+            Pair p = new Pair(proc, next[proc - 1]);
+            if (urBroadcast.sharedTable.containsKey(p)) {
+                next[proc - 1]++;
+                Record r = new Record(urBroadcast.sharedTable.get(p), proc);
+                urBroadcast.sharedTable.remove(p);
+                return r;
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
         return null;
     }
