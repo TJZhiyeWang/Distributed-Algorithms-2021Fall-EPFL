@@ -3,6 +3,7 @@ package cs451.Broadcast;
 import cs451.Listener.Listener;
 import cs451.Utils.Constant;
 import cs451.Utils.Message;
+import cs451.Utils.Pair;
 import cs451.Utils.Record;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class URBroadcast implements Broadcast, Runnable{
     BebBroadcast bebbroadcast;
     HashSet<Message> delivered;
     HashMap<Message, HashSet<Integer>> pending;
-    public LinkedBlockingQueue<Message> shareQueue;
+    HashMap<Pair, Message> sharedTable;
     int processNum;
 
     URBroadcast(int port){
@@ -21,7 +22,7 @@ public class URBroadcast implements Broadcast, Runnable{
         delivered = new HashSet<>();
         pending = new HashMap<>();
         processNum = Constant.getHosts().size();
-        shareQueue = new LinkedBlockingQueue<>();
+        sharedTable = new HashMap<>();
         new Thread(this).start();
     }
 
@@ -54,11 +55,7 @@ public class URBroadcast implements Broadcast, Runnable{
                 if (pending.get(record.m).size() > processNum/2){
                     delivered.add(record.m);
                     pending.remove(record.m);
-                    try{
-                        shareQueue.put(record.m);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    sharedTable.put(new Pair(record.m.sProcess, record.m.seq), record.m);
                     return record;
                 }
             }else{
