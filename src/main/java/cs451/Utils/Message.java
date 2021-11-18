@@ -7,10 +7,12 @@ import java.util.Arrays;
 public class Message implements Serializable {
     public byte[] payload;
     public int sProcess;
+    public int seq;
     public boolean flag = Constant.SEND;
-    public Message(byte[] payload, int sProcess){
+    public Message(byte[] payload, int sProcess, int seq){
         this.payload = payload;
         this.sProcess = sProcess;
+        this.seq = seq;
     }
 
     public void revert(){

@@ -24,8 +24,8 @@ public class StubbornLink implements Link, Runnable{
         while(flag){
             try{
                     Record record = this.queue.take();
-                    System.out.println("queue size: " + this.queue.size());
-                    System.out.println("Set size: " + this.sent.size());
+//                    System.out.println("queue size: " + this.queue.size());
+//                    System.out.println("Set size: " + this.sent.size());
                     if (sent.contains(record)) {
                         sent.remove(record);
                         continue;

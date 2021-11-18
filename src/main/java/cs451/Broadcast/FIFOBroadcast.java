@@ -37,7 +37,7 @@ public class FIFOBroadcast extends Listener implements Broadcast{
             for (int i = 0; i < urBroadcast.shareQueue.size(); i++) {
                 Message m = urBroadcast.shareQueue.take();
                 int proc = m.sProcess;
-                int lsn = Integer.parseInt(new String(m.payload));
+                int lsn = m.seq;
                 if (next[proc - 1] == lsn) {
                     next[proc - 1]++;
                     return new Record(m, m.sProcess);
