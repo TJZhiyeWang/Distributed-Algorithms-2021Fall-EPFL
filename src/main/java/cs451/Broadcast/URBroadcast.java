@@ -14,7 +14,7 @@ public class URBroadcast implements Broadcast, Runnable{
     BebBroadcast bebbroadcast;
     HashSet<Message> delivered;
     HashMap<Message, HashSet<Integer>> pending;
-    HashMap<Pair, Message> sharedTable;
+    HashMap<Pair, Record> sharedTable;
     int processNum;
 
     URBroadcast(int port){
@@ -55,7 +55,7 @@ public class URBroadcast implements Broadcast, Runnable{
                 if (pending.get(record.m).size() > processNum/2){
                     delivered.add(record.m);
                     pending.remove(record.m);
-                    sharedTable.put(new Pair(record.m.sProcess, record.m.seq), record.m);
+                    sharedTable.put(new Pair(record.m.sProcess, record.m.seq), record);
                     return record;
                 }
             }else{

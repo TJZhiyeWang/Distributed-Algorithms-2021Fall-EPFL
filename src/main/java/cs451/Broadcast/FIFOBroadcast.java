@@ -39,7 +39,7 @@ public class FIFOBroadcast extends Listener implements Broadcast{
             Pair p = new Pair(proc, next[proc - 1]);
             if (urBroadcast.sharedTable.containsKey(p)) {
                 next[proc - 1]++;
-                Record r = new Record(urBroadcast.sharedTable.get(p), proc);
+                Record r = urBroadcast.sharedTable.get(p);
                 urBroadcast.sharedTable.remove(p);
                 return r;
             }
