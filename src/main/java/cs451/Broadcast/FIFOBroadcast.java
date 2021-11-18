@@ -40,8 +40,10 @@ public class FIFOBroadcast extends Listener implements Broadcast{
             if (urBroadcast.sharedTable.containsKey(p)) {
                 next[proc - 1]++;
                 Record r = urBroadcast.sharedTable.get(p);
+                String log = Constant.DELIVER + " " + r.m.sProcess + " " + new String(r.m.payload) + "\n";
+                Constant.getLogger().log(log);
                 urBroadcast.sharedTable.remove(p);
-                return r;
+//                return r;
             }
         }
         return null;

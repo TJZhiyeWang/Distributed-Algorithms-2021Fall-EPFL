@@ -11,10 +11,10 @@ public abstract class Listener extends Thread implements Broadcast {
     public void run(){
         while(flag){
             Record record = deliver();
-            if (record != null) {
-                String log = Constant.DELIVER + " " + record.m.sProcess + " " + new String(record.m.payload) + "\n";
-                Constant.getLogger().log(log);
-            }
+//            if (record != null) {
+////                String log = Constant.DELIVER + " " + record.m.sProcess + " " + new String(record.m.payload) + "\n";
+////                Constant.getLogger().log(log);
+//            }
         }
     }
 
