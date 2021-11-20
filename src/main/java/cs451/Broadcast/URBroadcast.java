@@ -20,12 +20,12 @@ public class URBroadcast implements Broadcast, Runnable{
 
     URBroadcast(int port){
         bebbroadcast = new BebBroadcast(port);
-        delivered = new HashSet<>();
-        pending = new HashMap<>();
+        delivered = new HashSet<>(1024);
+        pending = new HashMap<>(1024);
         processNum = Constant.getHosts().size();
         priorityQueues = new PriorityBlockingQueue[Constant.getHosts().size()];
         for (int i=0; i<Constant.getHosts().size();i++){
-            priorityQueues[i] = new PriorityBlockingQueue<Record>(11, new Comparator<Record>(){
+            priorityQueues[i] = new PriorityBlockingQueue<Record>(1024, new Comparator<Record>(){
                 public int compare(Record o1, Record o2) {
                     return o1.m.seq - o2.m.seq;
                 }
