@@ -17,7 +17,7 @@ public class BebBroadcast implements Broadcast{
     BebBroadcast(int port){
         this.perfectLink = new PerfectLink(port);
         this.hosts = new ArrayList<>(Constant.getHosts());
-        //delete myself(dirty work, only used in bebbroadcast)
+        //delete myself
         int myself = Constant.getMyself();
         hosts.remove(myself - 1);
     }
