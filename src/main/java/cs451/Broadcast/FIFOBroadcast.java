@@ -3,7 +3,6 @@ package cs451.Broadcast;
 import cs451.Listener.Listener;
 import cs451.Utils.Constant;
 import cs451.Utils.Message;
-import cs451.Utils.Pair;
 import cs451.Utils.Record;
 
 public class FIFOBroadcast extends Listener implements Broadcast{
@@ -35,15 +34,17 @@ public class FIFOBroadcast extends Listener implements Broadcast{
     @Override
     public Record deliver() {
         //build a message and find whether the hashset has such kind of message
-        for (int proc = 1; proc <= Constant.getHosts().size(); proc++) {
-            Pair p = new Pair(proc, next[proc - 1]);
-            if (urBroadcast.sharedTable.containsKey(p)) {
-                next[proc - 1]++;
-                Record r = urBroadcast.sharedTable.get(p);
-                String log = Constant.DELIVER + " " + r.m.sProcess + " " + new String(r.m.payload) + "\n";
+        for (int i=0; i<Constant.getHosts().size(); i++){
+            Record record = urBroadcast.priorityQueues[i].peek();
+            if (record!=null && record.m.seq == next[i]){
+                String log = Constant.DELIVER + " " + record.m.sProcess + " " + new String(record.m.payload) + "\n";
                 Constant.getLogger().log(log);
-                urBroadcast.sharedTable.remove(p);
-//                return r;
+                next[i]++;
+                try {
+                    urBroadcast.priorityQueues[i].take();
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
             }
         }
         return null;
