@@ -61,8 +61,9 @@ public class URBroadcast implements Broadcast, Runnable{
             if (delivered.contains(record.m))//already been delivered
                 return null;
             if (pending.containsKey(record.m)){
-                pending.get(record.m).add(record.i);
-                if (pending.get(record.m).size() > processNum/2){
+                HashSet s = pending.get(record.m);
+                s.add(record.i);
+                if (s.size() > processNum/2){
                     delivered.add(record.m);
                     pending.remove(record.m);
                     priorityQueues[record.m.sProcess-1].put(record);
