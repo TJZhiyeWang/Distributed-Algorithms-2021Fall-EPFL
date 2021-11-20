@@ -20,8 +20,8 @@ public class URBroadcast implements Broadcast, Runnable{
 
     URBroadcast(int port){
         bebbroadcast = new BebBroadcast(port);
-        delivered = new HashSet<>(1024);
-        pending = new HashMap<>(1024);
+        delivered = new HashSet<>();
+        pending = new HashMap<>();
         processNum = Constant.getHosts().size();
         priorityQueues = new PriorityBlockingQueue[Constant.getHosts().size()];
         for (int i=0; i<Constant.getHosts().size();i++){

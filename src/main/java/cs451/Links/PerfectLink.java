@@ -17,7 +17,7 @@ public class PerfectLink implements Link{
         this.stubbornLink = new StubbornLink(port);
         tstubborn = new Thread(this.stubbornLink);
         tstubborn.start();
-        this.delivered = new HashSet<Record>(4096);
+        this.delivered = new HashSet<Record>();
     }
 
     @Override
