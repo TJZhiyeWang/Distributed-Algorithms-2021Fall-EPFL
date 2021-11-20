@@ -23,6 +23,7 @@ public class StubbornLink implements Link, Runnable{
     public void run(){
         while(flag){
             try{
+                for (int i=0; i<Constant.SEND_MESSAGE; i++){
                     Record record = this.queue.take();
 //                    System.out.println("queue size: " + this.queue.size());
 //                    System.out.println("Set size: " + this.sent.size());
@@ -32,7 +33,8 @@ public class StubbornLink implements Link, Runnable{
                     }
                     send(record.m, Constant.getIpFromHosts(record.i), Constant.getPortFromHosts(record.i));
                     queue.put(record);
-
+                }
+                Thread.sleep(Constant.SENDINTERVAL);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
