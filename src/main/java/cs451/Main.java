@@ -79,7 +79,7 @@ public class Main {
 
             for (int j = 1; j <= messageNum; j++){
                 //build message
-                Message m = new Message(String.valueOf(j).getBytes(), parser.myId(), j);
+                Message m = new Message(j, parser.myId(), j);
                 fifoBroadcast.broadcast(m);
             }
 

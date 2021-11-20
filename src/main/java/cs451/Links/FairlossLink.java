@@ -6,6 +6,7 @@ import cs451.Utils.Record;
 
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class FairlossLink implements Link{
 
@@ -23,11 +24,9 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-            outputStream.writeObject(m);
-            outputStream.flush();
-            byte[] bytes = byteArrayOutputStream.toByteArray();
+            String message = String.valueOf(m.payload) + ":" + String.valueOf(m.sProcess) +
+                    ":" + String.valueOf(m.seq) + ":" + String.valueOf(m.flag);
+            byte[] bytes = message.getBytes();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
         }catch (IOException e){
@@ -39,8 +38,19 @@ public class FairlossLink implements Link{
      */
     @Override
     public Record receive() {
-        byte[] container = new byte[128];
+        byte[] container = new byte[64];
         DatagramPacket packet = new DatagramPacket(container, 0, container.length);
+        try {
+            socket.receive(packet);
+            byte[] bytes = Arrays.copyOf(packet.getData(), packet.getLength());
+            String message = new String(bytes);
+            String[] messages = message.split(":");
+            Message m = new Message(Integer.parseInt(messages[0]),Integer.parseInt(messages[1]),Integer.parseInt(messages[2]));
+            Record record = new Record(m, Constant.getProcessIdFromIpAndPort(packet.getAddress().getHostAddress(), packet.getPort()));
+            return record;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
         try {
             socket.receive(packet);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream (packet.getData());

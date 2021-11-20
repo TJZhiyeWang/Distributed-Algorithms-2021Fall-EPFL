@@ -34,7 +34,7 @@ public class FIFOBroadcast extends Listener implements Broadcast{
 
     @Override
     public void broadcast(Message m){
-        String log = Constant.BROADCAST + " " + new String(m.payload) + "\n";
+        String log = Constant.BROADCAST + " " + m.payload + "\n";
         Constant.getLogger().log(log);
         urBroadcast.broadcast(m);
     }
@@ -51,7 +51,7 @@ public class FIFOBroadcast extends Listener implements Broadcast{
             for (int i=0; i<Constant.getHosts().size(); i++){
                 Record record = priorityQueues[i].peek();
                 if (record!=null && record.m.seq == next[i]){
-                    String log = Constant.DELIVER + " " + record.m.sProcess + " " + new String(record.m.payload) + "\n";
+                    String log = Constant.DELIVER + " " + record.m.sProcess + " " + record.m.payload + "\n";
                     Constant.getLogger().log(log);
                     next[i]++;
                     priorityQueues[i].poll();
@@ -60,7 +60,7 @@ public class FIFOBroadcast extends Listener implements Broadcast{
         }else{
             Record r = urBroadcast.sharedQueue.poll();
             if (r.m.seq == next[r.m.sProcess-1]){
-                String log = Constant.DELIVER + " " + r.m.sProcess + " " + new String(r.m.payload) + "\n";
+                String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
                 Constant.getLogger().log(log);
                 next[r.m.sProcess-1]++;
             }else{
