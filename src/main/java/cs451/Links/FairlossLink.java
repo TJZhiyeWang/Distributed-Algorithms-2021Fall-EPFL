@@ -7,6 +7,7 @@ import cs451.Utils.Record;
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
+import java.util.List;
 
 public class FairlossLink implements Link{
 
@@ -24,9 +25,20 @@ public class FairlossLink implements Link{
     @Override
     public void send(Message m, String ip, int port) {
         try {
-            String message = String.valueOf(m.payload) + ":" + String.valueOf(m.sProcess) +
-                    ":" + String.valueOf(m.seq) + ":" + String.valueOf(m.flag);
-            byte[] bytes = message.getBytes();
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(m.payload);
+            buffer.append(":");
+            buffer.append(m.sProcess);
+            buffer.append(":");
+            buffer.append(m.flag);
+            buffer.append(":");
+            if (m.clock != null){
+                for (int i = 0; i < m.clock.length; i++){
+                    buffer.append(m.clock[i]);
+                    buffer.append("_");
+                }
+            }
+            byte[] bytes = buffer.toString().getBytes();
             DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, new InetSocketAddress(ip, port));
             socket.send(packet);
         }catch (IOException e){
@@ -45,25 +57,20 @@ public class FairlossLink implements Link{
             byte[] bytes = Arrays.copyOf(packet.getData(), packet.getLength());
             String message = new String(bytes);
             String[] messages = message.split(":");
-            Message m = new Message(Integer.parseInt(messages[0]),Integer.parseInt(messages[1]),Integer.parseInt(messages[2]));
+            Message m = new Message(Integer.parseInt(messages[0]), Integer.parseInt(messages[1]));
+            if (messages[2].equals("true")){
+                String[] numbers = messages[3].split("_");
+                int[] clock = new int[numbers.length];
+                for (int i = 0; i < clock.length; i++) {
+                    clock[i] = Integer.parseInt(numbers[i]);
+                }
+                m.initClock(clock);
+            }else{
+                m.revert();
+            }
+
             Record record = new Record(m, Constant.getProcessIdFromIpAndPort(packet.getAddress().getHostAddress(), packet.getPort()));
             return record;
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        try {
-            socket.receive(packet);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream (packet.getData());
-            ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream);
-            try {
-                Object obj = inputStream.readObject();
-                if (obj instanceof Message) {
-                    Record record = new Record((Message) obj, Constant.getProcessIdFromIpAndPort(packet.getAddress().getHostAddress(), packet.getPort()));
-                    return record;
-                }
-            }catch (ClassNotFoundException e){
-                e.printStackTrace();
-            }
         }catch (IOException e){
             e.printStackTrace();
         }

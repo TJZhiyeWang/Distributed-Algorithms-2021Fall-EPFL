@@ -1,5 +1,6 @@
 package cs451.Utils;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Constant {
@@ -9,7 +10,6 @@ public class Constant {
     public static final int SENDINTERVAL = 300;
     public static final int NOTFOUND = -1;
     public static final int BUFFER_SIZE = 1000000;
-    public static final int BIG_NUMBER = 100000;
     public static final int HASHSET_CAPACITY = (int)Math.pow(2,10);
     public static final int SEND_MESSAGE = 5000;
 
@@ -18,6 +18,15 @@ public class Constant {
     public static List<Host> hosts;
     public static Logger logger;
     public static int myself;
+    public static HashMap<Integer, int[]> casualRules;
+
+    public static void initCasualRules(HashMap casualRules){
+        Constant.casualRules = casualRules;
+    }
+
+    public static HashMap getCasualRules(){
+        return casualRules;
+    }
 
     public static void initHost(List hosts){
         Constant.hosts = hosts;

@@ -1,6 +1,6 @@
 package cs451;
 
-import cs451.Broadcast.FIFOBroadcast;
+import cs451.Broadcast.LCBroadcast;
 import cs451.Parser.Parser;
 import cs451.Utils.Constant;
 import cs451.Utils.Host;
@@ -8,6 +8,7 @@ import cs451.Utils.Logger;
 import cs451.Utils.Message;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -64,7 +65,19 @@ public class Main {
         System.out.println("Doing some initialization\n");
         try{
             Scanner scan = new Scanner(new FileReader(parser.config()));
-            int messageNum = Integer.parseInt(scan.next());//how many messages each process should send
+            int messageNum = Integer.parseInt(scan.nextLine());//how many messages each process should send
+            //build casual rules
+            HashMap<Integer, int[]> casualRule = new HashMap<>();
+            while (scan.hasNextLine()){
+                String line = scan.nextLine();
+                String[] numbers = line.split(" ");
+                int[] affectProcess = new int[numbers.length];
+                for (int i=0; i<affectProcess.length; i++){
+                    affectProcess[i] = Integer.parseInt(numbers[i]);
+                }
+                casualRule.put(Integer.parseInt(numbers[0]), affectProcess);
+            }
+            Constant.initCasualRules(casualRule);
             //init myself
             Host host = parser.hosts().get(parser.myId()-1);
             Constant.initMyself(parser.myId());
@@ -73,14 +86,14 @@ public class Main {
             Constant.initlogger(logger);
             //init host
             Constant.initHost(parser.hosts());
+            LCBroadcast lcBroadcast = new LCBroadcast(host.getPort());
 
-            FIFOBroadcast fifoBroadcast = new FIFOBroadcast(host.getPort());
             System.out.println("Broadcasting and delivering messages...\n");
 
             for (int j = 1; j <= messageNum; j++){
                 //build message
-                Message m = new Message(j, parser.myId(), j);
-                fifoBroadcast.broadcast(m);
+                Message m = new Message(j, parser.myId());
+                lcBroadcast.broadcast(m);
             }
 
         }catch (FileNotFoundException e){

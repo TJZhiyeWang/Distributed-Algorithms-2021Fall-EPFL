@@ -52,8 +52,9 @@ public class PerfectLink implements Link{
     }
 
     public void ack(Record record){
-        Message m = new Message(record.m.payload, record.m.sProcess, record.m.seq);
+        Message m = new Message(record.m.payload, record.m.sProcess);
         m.revert();
+        m.destroyClock();
         this.stubbornLink.send(m, Constant.getIpFromHosts(record.i), Constant.getPortFromHosts(record.i));
     }
 

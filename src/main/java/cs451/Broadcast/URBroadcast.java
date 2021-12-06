@@ -62,6 +62,8 @@ public class URBroadcast implements Broadcast, Runnable{
                     pending.remove(record.m);
                     try {
                         sharedQueue.put(record);
+//                        String log = Constant.DELIVER + " " + record.m.sProcess + " " + record.m.payload + "\n";
+//                        System.out.println(log);
                     }catch (InterruptedException e){
                         e.printStackTrace();
                     }

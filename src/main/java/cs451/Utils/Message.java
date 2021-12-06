@@ -7,16 +7,25 @@ import java.util.Arrays;
 public class Message implements Serializable {
     public int payload;
     public int sProcess;
-    public int seq;
+    public int[] clock;
     public boolean flag = Constant.SEND;
-    public Message(int payload, int sProcess, int seq){
+    public Message(int payload, int sProcess){
         this.payload = payload;
         this.sProcess = sProcess;
-        this.seq = seq;
+        this.clock = null;
     }
 
     public void revert(){
         this.flag = this.flag==Constant.ACK? Constant.SEND : Constant.ACK;
+    }
+
+    public void initClock (int[] clock){
+        this.clock = clock.clone();
+        this.clock[Constant.getMyself()-1] = this.payload;
+    }
+
+    public void destroyClock(){
+        this.clock = null;
     }
 
 
