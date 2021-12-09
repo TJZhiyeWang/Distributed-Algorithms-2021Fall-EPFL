@@ -20,6 +20,10 @@ public class PerfectLink implements Link{
         this.delivered = new HashSet<Record>();
     }
 
+    public int getSpeed(){
+        return stubbornLink.queue.size();
+    }
+
     @Override
     public void send(Message m, String ip, int port){
         try{

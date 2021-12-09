@@ -89,11 +89,14 @@ public class Main {
             LCBroadcast lcBroadcast = new LCBroadcast(host.getPort());
 
             System.out.println("Broadcasting and delivering messages...\n");
-
             for (int j = 1; j <= messageNum; j++){
                 //build message
                 Message m = new Message(j, parser.myId());
                 lcBroadcast.broadcast(m);
+                while (lcBroadcast.getSpeed() >=10000){
+                    Thread.sleep(1000);
+                    System.out.println("sleep");
+                }
             }
 
         }catch (FileNotFoundException e){

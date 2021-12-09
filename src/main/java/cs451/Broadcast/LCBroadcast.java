@@ -11,6 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class LCBroadcast extends Listener implements Broadcast{
     URBroadcast urBroadcast;
     PriorityBlockingQueue<Record>[] priorityQueues;
+    int speed;
 
     int next[];
 
@@ -34,11 +35,14 @@ public class LCBroadcast extends Listener implements Broadcast{
         this.start();
     }
 
+    public int getSpeed(){
+        return urBroadcast.bebbroadcast.perfectLink.getSpeed();
+    }
+
 
     @Override
     public void broadcast(Message m){
         String log = Constant.BROADCAST + " " + m.payload + "\n";
-        System.out.println(log);
         Constant.getLogger().log(log);
         m.initClock(next);
         urBroadcast.broadcast(m);
