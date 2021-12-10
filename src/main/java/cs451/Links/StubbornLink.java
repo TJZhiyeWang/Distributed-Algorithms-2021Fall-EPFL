@@ -23,18 +23,20 @@ public class StubbornLink implements Link, Runnable{
     public void run(){
         while(flag){
             try{
-                for (int i=0; i<Constant.SEND_MESSAGE; i++){
-                    Record record = this.queue.take();
-//                    System.out.println("queue size: " + this.queue.size());
-//                    System.out.println("Set size: " + this.sent.size());
-                    if (sent.contains(record)) {
-                        sent.remove(record);
-                        continue;
-                    }
-                    send(record.m, Constant.getIpFromHosts(record.i), Constant.getPortFromHosts(record.i));
-                    queue.put(record);
+                Record record = this.queue.take();
+//                System.out.println("queue size: " + this.queue.size());
+//                System.out.println("Set size: " + this.sent.size());
+                if (sent.contains(record)) {
+                    sent.remove(record);
+                    continue;
                 }
-                Thread.sleep(Constant.SENDINTERVAL);
+                if (record.m.sProcess == Constant.getMyself()){
+                    int[] tmp = Constant.getNext().clone();
+                    tmp[Constant.getMyself()-1] = record.m.payload;
+                    record.m.initClock(tmp);
+                }
+                send(record.m, Constant.getIpFromHosts(record.i), Constant.getPortFromHosts(record.i));
+                queue.put(record);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

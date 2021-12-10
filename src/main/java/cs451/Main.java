@@ -93,9 +93,10 @@ public class Main {
                 //build message
                 Message m = new Message(j, parser.myId());
                 lcBroadcast.broadcast(m);
-                while (lcBroadcast.getSpeed() >=10000){
-                    Thread.sleep(1000);
-                    System.out.println("sleep");
+                if (j%100 == 0){
+                    while (lcBroadcast.getSpeed() >=10000){
+                        Thread.sleep(2000);
+                    }
                 }
             }
 

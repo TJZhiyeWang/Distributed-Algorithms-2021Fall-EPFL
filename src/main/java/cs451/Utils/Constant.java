@@ -19,6 +19,15 @@ public class Constant {
     public static Logger logger;
     public static int myself;
     public static HashMap<Integer, int[]> casualRules;
+    public static int[] next;
+
+    public static void initNext(int[] next){
+        Constant.next = next;
+    }
+
+    public static int[] getNext(){
+        return next;
+    }
 
     public static void initCasualRules(HashMap casualRules){
         Constant.casualRules = casualRules;

@@ -20,8 +20,7 @@ public class Message implements Serializable {
     }
 
     public void initClock (int[] clock){
-        this.clock = clock.clone();
-        this.clock[Constant.getMyself()-1] = this.payload;
+        this.clock = clock;
     }
 
     public void destroyClock(){
