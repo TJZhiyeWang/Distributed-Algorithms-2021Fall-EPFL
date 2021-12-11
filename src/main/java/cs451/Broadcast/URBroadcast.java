@@ -15,8 +15,9 @@ public class URBroadcast implements Broadcast, Runnable{
     BebBroadcast bebbroadcast;
     HashSet<Message> delivered;
     HashMap<Message, HashSet<Integer>> pending;
-    public LinkedBlockingQueue<Record> sharedQueue;
     int processNum;
+    public PriorityBlockingQueue<Record>[] priorityQueues;
+
 
 
     URBroadcast(int port){
@@ -24,8 +25,15 @@ public class URBroadcast implements Broadcast, Runnable{
         delivered = new HashSet<>();
         pending = new HashMap<>();
         processNum = Constant.getHosts().size();
-        sharedQueue = new LinkedBlockingQueue<>();
 
+        priorityQueues = new PriorityBlockingQueue[Constant.getHosts().size()];
+        for (int i=0; i<Constant.getHosts().size(); i++){
+            priorityQueues[i] = new PriorityBlockingQueue<Record>(1024, new Comparator<Record>(){
+                public int compare(Record o1, Record o2) {
+                    return o1.m.clock[o1.m.sProcess-1] - o2.m.clock[o2.m.sProcess-1];
+                }
+            });
+        }
 
         new Thread(this).start();
     }
@@ -60,13 +68,10 @@ public class URBroadcast implements Broadcast, Runnable{
                 if (s.size() > processNum/2){
                     delivered.add(record.m);
                     pending.remove(record.m);
-                    try {
-                        sharedQueue.put(record);
+                    priorityQueues[record.m.sProcess-1].put(record);
 //                        String log = Constant.DELIVER + " " + record.m.sProcess + " " + record.m.payload + "\n";
 //                        System.out.println(log);
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
+
                     return record;
                 }
             }else{

@@ -11,21 +11,11 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 public class LCBroadcast extends Listener implements Broadcast{
     URBroadcast urBroadcast;
-    PriorityBlockingQueue<Record>[] priorityQueues;
 
     int next[];
 
     public LCBroadcast(int port){
         urBroadcast = new URBroadcast(port);
-
-        priorityQueues = new PriorityBlockingQueue[Constant.getHosts().size()];
-        for (int i=0; i<Constant.getHosts().size(); i++){
-            priorityQueues[i] = new PriorityBlockingQueue<Record>(1024, new Comparator<Record>(){
-                public int compare(Record o1, Record o2) {
-                    return o1.m.clock[o1.m.sProcess-1] - o2.m.clock[o2.m.sProcess-1];
-                }
-            });
-        }
 
         next = new int[Constant.getHosts().size()];
         for (int i=0; i<next.length; i++){
@@ -55,33 +45,33 @@ public class LCBroadcast extends Listener implements Broadcast{
 
     @Override
     public Record deliver(){
-        if (urBroadcast.sharedQueue.isEmpty()){
-            for (int i=0; i<Constant.getHosts().size(); i++){
-                Record r = priorityQueues[i].peek();
-//                System.out.println(priorityQueues[i].size());
-//                if (r!=null){
-//                    System.out.println(Arrays.toString(r.m.clock));
-//                }
-                if (r!=null && compare(next, r.m.clock, (int[]) Constant.getCasualRules().get(r.m.sProcess))){
+        for (int i=0; i<Constant.getHosts().size(); i++){
+            int[] tmp = (int[])Constant.getCasualRules().get(i+1);
+            for (int j = 1; j < tmp.length; j++){
+                Record r = tryDeliver(tmp[j]);
+                if (r!=null){
                     String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
-//                    String log1 = "my clock: " + Arrays.toString(next) + "external clock: " + Arrays.toString(r.m.clock) + "\n" ;
                     Constant.getLogger().log(log);
-                    next[i]++;
-                    priorityQueues[i].poll();
                 }
             }
-        }else{
-            Record r = urBroadcast.sharedQueue.poll();
-            if (r!=null && compare(next, r.m.clock, (int[]) Constant.getCasualRules().get(r.m.sProcess))){
+            Record r = tryDeliver(i+1);
+            if (r!=null) {
                 String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
-//                String log1 = "my clock: " + Arrays.toString(next) + "external clock: " + Arrays.toString(r.m.clock) + "\n";
                 Constant.getLogger().log(log);
-                next[r.m.sProcess-1]++;
-            }else{
-                priorityQueues[r.m.sProcess-1].put(r);
             }
         }
         return null;
+    }
+    // try to deliver a record from process i
+    private Record tryDeliver(int i){
+        Record r = urBroadcast.priorityQueues[i-1].peek();
+        if (r!=null && compare(next, r.m.clock, (int[]) Constant.getCasualRules().get(i))){
+            next[i-1]++;
+            urBroadcast.priorityQueues[i-1].poll();
+            return r;
+        }
+        else
+            return null;
     }
 
     private boolean compare(int[] myClock, int[] otherClock, int[] index){
