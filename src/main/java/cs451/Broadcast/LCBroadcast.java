@@ -48,32 +48,25 @@ public class LCBroadcast extends Listener implements Broadcast{
         for (int i=0; i<Constant.getHosts().size(); i++){
             int[] tmp = (int[])Constant.getCasualRules().get(i+1);
             for (int j = 1; j < tmp.length; j++){
-                Record r = tryDeliver(tmp[j]);
-                if (r!=null){
-                    r.m.destroyClock();
-                    String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
-                    Constant.getLogger().log(log);
-                }
+                while(tryDeliver(tmp[j]));
             }
-            Record r = tryDeliver(i+1);
-            if (r!=null) {
-                r.m.destroyClock();
-                String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
-                Constant.getLogger().log(log);
-            }
+            while(tryDeliver(i+1));
         }
         return null;
     }
     // try to deliver a record from process i
-    private Record tryDeliver(int i){
+    private boolean tryDeliver(int i){
         Record r = urBroadcast.priorityQueues[i-1].peek();
         if (r!=null && compare(next, r.m.clock, (int[]) Constant.getCasualRules().get(i))){
             next[i-1]++;
             urBroadcast.priorityQueues[i-1].poll();
-            return r;
+            r.m.destroyClock();
+            String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
+            Constant.getLogger().log(log);
+            return true;
         }
         else
-            return null;
+            return false;
     }
 
     private boolean compare(int[] myClock, int[] otherClock, int[] index){
