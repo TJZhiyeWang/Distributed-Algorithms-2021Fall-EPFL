@@ -50,12 +50,14 @@ public class LCBroadcast extends Listener implements Broadcast{
             for (int j = 1; j < tmp.length; j++){
                 Record r = tryDeliver(tmp[j]);
                 if (r!=null){
+                    r.m.destroyClock();
                     String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
                     Constant.getLogger().log(log);
                 }
             }
             Record r = tryDeliver(i+1);
             if (r!=null) {
+                r.m.destroyClock();
                 String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
                 Constant.getLogger().log(log);
             }
