@@ -22,6 +22,8 @@ public class StubbornLink implements Link, Runnable{
     @Override
     public void run(){
         while(flag){
+//            int num = this.queue.size();
+//            if (num > 000)
             try{
                 Record record = this.queue.take();
 //                System.out.println("queue size: " + this.queue.size());
@@ -29,11 +31,6 @@ public class StubbornLink implements Link, Runnable{
                 if (sent.contains(record)) {
                     sent.remove(record);
                     continue;
-                }
-                if (record.m.sProcess == Constant.getMyself()){
-                    int[] tmp = Constant.getNext().clone();
-                    tmp[Constant.getMyself()-1] = record.m.payload;
-                    record.m.initClock(tmp);
                 }
                 send(record.m, Constant.getIpFromHosts(record.i), Constant.getPortFromHosts(record.i));
                 queue.put(record);

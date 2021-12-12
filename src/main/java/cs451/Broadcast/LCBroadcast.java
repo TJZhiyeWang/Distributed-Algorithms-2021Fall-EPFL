@@ -35,6 +35,9 @@ public class LCBroadcast extends Listener implements Broadcast{
     public void broadcast(Message m){
         String log = Constant.BROADCAST + " " + m.payload + "\n";
         Constant.getLogger().log(log);
+        int[] tmp = Constant.getNext().clone();
+        tmp[Constant.getMyself()-1] = m.payload;
+        m.initClock(tmp);
         urBroadcast.broadcast(m);
     }
 
@@ -46,6 +49,7 @@ public class LCBroadcast extends Listener implements Broadcast{
     @Override
     public Record deliver(){
         for (int i=0; i<Constant.getHosts().size(); i++){
+
             int[] tmp = (int[])Constant.getCasualRules().get(i+1);
             for (int j = 1; j < tmp.length; j++){
                 while(tryDeliver(tmp[j]));
