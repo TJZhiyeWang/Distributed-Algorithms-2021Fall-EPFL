@@ -76,8 +76,7 @@ public class URBroadcast implements Broadcast, Runnable{
                 }
                 return null;
             }else{
-                Message m  = new Message(record.m.payload, record.m.sProcess);
-                pending.put(m, new HashSet<>(){{add(record.i);}});
+                pending.put(record.m, new HashSet<>(){{add(record.i);}});
                 bebbroadcast.broadcast(record.m);
             }
         }
