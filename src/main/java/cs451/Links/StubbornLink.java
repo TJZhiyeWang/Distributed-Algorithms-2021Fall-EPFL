@@ -22,8 +22,7 @@ public class StubbornLink implements Link, Runnable{
     @Override
     public void run(){
         while(flag){
-//            int num = this.queue.size();
-//            if (num > 000)
+
             try{
                 Record record = this.queue.take();
                 System.out.println("queue size: " + this.queue.size());

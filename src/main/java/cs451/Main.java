@@ -89,14 +89,13 @@ public class Main {
             LCBroadcast lcBroadcast = new LCBroadcast(host.getPort());
 
             System.out.println("Broadcasting and delivering messages...\n");
+            int MessageNum = 5000/Constant.getHosts().size();
             for (int j = 1; j <= messageNum; j++){
                 //build message
                 Message m = new Message(j, parser.myId());
                 lcBroadcast.broadcast(m);
-                if (j%300 == 0){
-                    while (lcBroadcast.getSpeed() >= 5000){
-                        Thread.sleep(3000);
-                    }
+                while (j - lcBroadcast.rev >= MessageNum){
+                    Thread.sleep(2000);
                 }
             }
 

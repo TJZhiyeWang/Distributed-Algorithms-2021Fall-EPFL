@@ -13,6 +13,7 @@ public class LCBroadcast extends Listener implements Broadcast{
     URBroadcast urBroadcast;
 
     int next[];
+    public int rev;
 
     public LCBroadcast(int port){
         urBroadcast = new URBroadcast(port);
@@ -22,7 +23,7 @@ public class LCBroadcast extends Listener implements Broadcast{
             next[i] = 1;
         }
         Constant.initNext(next);
-
+        this.rev = 0;
         this.start();
     }
 
@@ -69,6 +70,8 @@ public class LCBroadcast extends Listener implements Broadcast{
             m.destroyClock();
             String log = Constant.DELIVER + " " + m.sProcess + " " + m.payload + "\n";
             Constant.getLogger().log(log);
+            if (i == Constant.getMyself())
+                this.rev++;
             return true;
         }
         else
