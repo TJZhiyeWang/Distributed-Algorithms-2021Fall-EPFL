@@ -16,7 +16,7 @@ public class URBroadcast implements Broadcast, Runnable{
     HashSet<Message> delivered;
     HashMap<Message, HashSet<Integer>> pending;
     int processNum;
-    public PriorityBlockingQueue<Record>[] priorityQueues;
+    public PriorityBlockingQueue<Message>[] priorityQueues;
 
 
 
@@ -28,9 +28,9 @@ public class URBroadcast implements Broadcast, Runnable{
 
         priorityQueues = new PriorityBlockingQueue[Constant.getHosts().size()];
         for (int i=0; i<Constant.getHosts().size(); i++){
-            priorityQueues[i] = new PriorityBlockingQueue<Record>(1024, new Comparator<Record>(){
-                public int compare(Record o1, Record o2) {
-                    return o1.m.clock[o1.m.sProcess-1] - o2.m.clock[o2.m.sProcess-1];
+            priorityQueues[i] = new PriorityBlockingQueue<Message>(1024, new Comparator<Message>(){
+                public int compare(Message o1, Message o2) {
+                    return o1.clock[o1.sProcess-1] - o2.clock[o2.sProcess-1];
                 }
             });
         }
@@ -68,7 +68,7 @@ public class URBroadcast implements Broadcast, Runnable{
                 if (s.size() > processNum/2){
                     delivered.add(record.m);
                     pending.remove(record.m);
-                    priorityQueues[record.m.sProcess-1].put(record);
+                    priorityQueues[record.m.sProcess-1].put(record.m);
 //                        String log = Constant.DELIVER + " " + record.m.sProcess + " " + record.m.payload + "\n";
 //                        System.out.println(log);
 

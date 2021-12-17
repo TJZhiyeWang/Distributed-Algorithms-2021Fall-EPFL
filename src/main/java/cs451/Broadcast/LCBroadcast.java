@@ -60,12 +60,12 @@ public class LCBroadcast extends Listener implements Broadcast{
     }
     // try to deliver a record from process i
     private boolean tryDeliver(int i){
-        Record r = urBroadcast.priorityQueues[i-1].peek();
-        if (r!=null && compare(next, r.m.clock, (int[]) Constant.getCasualRules().get(i))){
+        Message m = urBroadcast.priorityQueues[i-1].peek();
+        if (m!=null && compare(next, m.clock, (int[]) Constant.getCasualRules().get(i))){
             next[i-1]++;
             urBroadcast.priorityQueues[i-1].poll();
-            r.m.destroyClock();
-            String log = Constant.DELIVER + " " + r.m.sProcess + " " + r.m.payload + "\n";
+            m.destroyClock();
+            String log = Constant.DELIVER + " " + m.sProcess + " " + m.payload + "\n";
             Constant.getLogger().log(log);
             return true;
         }
