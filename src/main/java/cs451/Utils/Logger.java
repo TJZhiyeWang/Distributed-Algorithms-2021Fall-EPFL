@@ -2,6 +2,8 @@ package cs451.Utils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Logger {
     String directory;
@@ -9,6 +11,8 @@ public class Logger {
     OutputStream outputStream;
     ByteBuffer buffer;
     byte[] tmp;
+    Lock lock=new ReentrantLock();
+
 
     public Logger(String dir){
         this.directory = dir;
@@ -26,6 +30,8 @@ public class Logger {
     }
 
     public void log(String msg){
+        lock.lock();
+        try{
         int limit = this.buffer.limit();
         int position = this.buffer.position();
         byte[] byteStream = msg.getBytes();
@@ -33,6 +39,9 @@ public class Logger {
             write();
         }
         this.buffer.put(byteStream);
+        }finally {
+            lock.unlock();
+        }
     }
 
     //write broadcast or delivery record to the file
