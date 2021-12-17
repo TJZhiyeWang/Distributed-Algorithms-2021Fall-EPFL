@@ -49,9 +49,9 @@ public class PerfectLink implements Link{
                 this.ack(record);
                 return null;
             } else {
-                Message m  = new Message(record.m.payload, record.m.sProcess);
-                Record r = new Record(m, record.i);
-                delivered.add(r);
+//                Message m  = new Message(record.m.payload, record.m.sProcess);
+//                Record r = new Record(m, record.i);
+                delivered.add(record);
             }
             return record;
         }
