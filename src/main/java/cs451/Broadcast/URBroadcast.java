@@ -58,7 +58,7 @@ public class URBroadcast implements Broadcast, Runnable{
 
     @Override
     public Record deliver(){
-        System.out.println("process" + Constant.getMyself() + "delivered size: " + this.delivered.size());
+//        System.out.println("process" + Constant.getMyself() + "delivered size: " + this.delivered.size());
         Record record = this.receive();
         if (record != null){
             if (delivered.contains(record.m))//already been delivered
